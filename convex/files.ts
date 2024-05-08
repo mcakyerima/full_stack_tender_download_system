@@ -5,6 +5,16 @@ import { ConvexError, v } from "convex/values";
 import { MutationCtx, QueryCtx, mutation, query } from "./_generated/server"
 import { getUser } from "./users";
 
+// creating an upload url generator
+export const generateUploadUrl = mutation(async (ctx) => {
+    // stop unauthorized upload
+    const identity = await ctx.auth.getUserIdentity();
+    
+    if (!identity) throw new ConvexError("you must be logged in to upload a file");
+
+    return await ctx.storage.generateUploadUrl();
+});
+
 // Helper function to check Org Access
 async function hasAccessToOrg (
     ctx: QueryCtx | MutationCtx,
@@ -22,7 +32,10 @@ async function hasAccessToOrg (
 export const createFile = mutation({
     args: {
         name: v.string(),
+        description: v.string(),
+        deadline: v.string(),
         orgId: v.string(),
+        fileId: v.id("_storage"),
     },
 
     async handler(ctx, args) {
@@ -37,7 +50,10 @@ export const createFile = mutation({
 
         await ctx.db.insert("files", {
             name: args.name,
+            description: args.description,
+            deadline: args.deadline,
             orgId: args.orgId,
+            fileId: args.fileId
         });
     }
 })
