@@ -29,6 +29,7 @@ async function hasAccessToOrg (
     return hasAccess
 }
 
+// createFile is used to create a file in the database
 export const createFile = mutation({
     args: {
         name: v.string(),
@@ -41,13 +42,17 @@ export const createFile = mutation({
     async handler(ctx, args) {
         // stop unauthorized upload
         const identity = await ctx.auth.getUserIdentity();
-    
+        
+        // stop unauthorized upload
         if (!identity) throw new ConvexError("you must be logged in to upload a file");
 
+        // check if user has access to the org
         const hasAccess = await hasAccessToOrg(ctx, identity.tokenIdentifier, args.orgId);
 
+        // stop unauthorized access
         if (!hasAccess) throw new ConvexError("you do not have access to this org");
 
+        // add file to database
         await ctx.db.insert("files", {
             name: args.name,
             description: args.description,
@@ -58,7 +63,7 @@ export const createFile = mutation({
     }
 })
 
-// query is used to fetch data from database
+// getFiles query is used to fetch data from database
 export const getFiles = query({
     args:{
         orgId: v.string()
@@ -70,13 +75,50 @@ export const getFiles = query({
         if (!identity) {
             return []
         }
+        // check if user has access to the org
         const hasAccess = await hasAccessToOrg(ctx, identity.tokenIdentifier, args.orgId);
 
+        // return empty array if user does not have access
         if (!hasAccess) return [];
 
         // return ctx.db.)query('files').collect();
         return ctx.db.query("files").withIndex("by_orgId",
          q => q.eq("orgId", args.orgId)
         ).collect();
+    }
+})
+
+// deleteFile mutation is used to delete a file from the database
+export const deleteFile = mutation({
+    args: {
+        fileId: v.id("files")
+    },
+    async handler(ctx, args) {
+        // stop unauthorized access
+        const identity = await ctx.auth.getUserIdentity();
+
+        if (!identity) throw new ConvexError("you must be logged in to delete a file");
+
+        // get file from database
+        const file = await ctx.db.get(args.fileId);
+
+        // if file does not exist throw a convex error
+        if (!file) throw new ConvexError("file does not exist");
+
+        // check if user has access to the org
+        const hasAccess = await hasAccessToOrg(
+            ctx,
+            identity.tokenIdentifier,
+            file.orgId
+        );
+
+        // stop unauthorized access
+        if (!hasAccess) throw new ConvexError("you do not have access to this org");
+
+        // if user has no access to the org, throw a convex error
+        if (!hasAccess) throw new ConvexError("you do not have access to delete this file");
+
+        // delete file from database
+        await ctx.db.delete(args.fileId);
     }
 })
