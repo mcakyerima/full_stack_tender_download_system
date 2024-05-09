@@ -4,6 +4,7 @@
 import { ConvexError, v } from "convex/values";
 import { MutationCtx, QueryCtx, mutation, query } from "./_generated/server"
 import { getUser } from "./users";
+import { fileTypes } from "./schema";
 
 // creating an upload url generator
 export const generateUploadUrl = mutation(async (ctx) => {
@@ -33,6 +34,7 @@ async function hasAccessToOrg (
 export const createFile = mutation({
     args: {
         name: v.string(),
+        type: fileTypes,
         description: v.string(),
         deadline: v.string(),
         orgId: v.string(),
@@ -55,6 +57,7 @@ export const createFile = mutation({
         // add file to database
         await ctx.db.insert("files", {
             name: args.name,
+            type: args.type,
             description: args.description,
             deadline: args.deadline,
             orgId: args.orgId,
@@ -120,5 +123,21 @@ export const deleteFile = mutation({
 
         // delete file from database
         await ctx.db.delete(args.fileId);
+    }
+})
+
+// generate an image url based on storage id
+export const imageUrl = query({
+    args: {
+        fileId: v.id("_storage")
+    },
+    async handler(ctx, args) {
+        // stop unauthorized access
+        const identity = await ctx.auth.getUserIdentity();
+
+        if (!identity) throw new ConvexError("you must be logged in to delete a file");
+
+        const url = await ctx.storage.getUrl(args.fileId);
+        return url;
     }
 })

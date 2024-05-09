@@ -5,19 +5,18 @@ import Image from 'next/image';
 
 function Header() {
   return (
-    <div className="sticky top-0 z-40 border-b py-3 backdrop-filter backdrop-blur-lg bg-opacity-80">
+    <div className="sticky top-0 z-40 border-b py-2 shadow-sm backdrop-filter backdrop-blur-lg bg-opacity-80">
       <div className="container flex justify-between items-center mx-auto">
-        <div className="flex items-center">
           <Image
-            height={32}
-            width={32}
-            src="/Mlogo.png"
+            height={100}
+            width={100}
+            src="/Mercy-Corps.svg"
             alt="MercyCorps Logo"
           />
-          <span className="text-xl font-bold text-rose-600">MercyCorps</span>
-        </div>
         <nav className="flex gap-3">
-          <OrganizationSwitcher />
+          <div className="hidden md:block">
+            <OrganizationSwitcher/>
+          </div>
           <UserButton />
           <SignedOut>
             <SignInButton>

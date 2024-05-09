@@ -5,34 +5,78 @@ import { Doc } from "@/convex/_generated/dataModel";
 import { calculateRemainingDays } from "@/lib/date-utils";
 import { FileCardActions } from "./file-card-actions";
 
+import { FcImageFile } from "react-icons/fc";
+import { FaFilePdf } from "react-icons/fa";
+import { FaFileCsv } from "react-icons/fa6";
+import { PiMicrosoftExcelLogo } from "react-icons/pi";
+import { PiMicrosoftWordLogoFill } from "react-icons/pi";
+import { ReactNode } from "react";
+import { api } from "@/convex/_generated/api";
+import { useQuery } from "convex/react";
+
+
 export const FileCard = ({
   file
 }: { file: Doc<"files"> }) => {
-  const [remainingDays, setRemainingDays] = useState<number | null>(null);
+  const fileUrl  = useQuery(api.files.imageUrl, { fileId: file.fileId });
 
+  const [remainingDays, setRemainingDays] = useState<number | null>(null);
+  
+  const headerIconTypes = {
+    image: <FcImageFile size={25} />,
+    pdf: <FaFilePdf size={25} color="rose" />,
+    csv: <FaFileCsv size={25} />,
+    xls: <PiMicrosoftExcelLogo size={25} />,
+    doc: <PiMicrosoftWordLogoFill size={25} />
+  } as Record<Doc<"files">["type"], ReactNode>;
+
+  const iconTypes = {
+    image: <FcImageFile size={50} />,
+    pdf: <FaFilePdf size={50} color="rose" />,
+    csv: <FaFileCsv size={50} />,
+    xls: <PiMicrosoftExcelLogo size={50} />,
+    doc: <PiMicrosoftWordLogoFill size={50} />
+  } as Record<Doc<"files">["type"], ReactNode>;
+ 
   useEffect(() => {
     const deadlineDate = new Date(file.deadline);
     const days = calculateRemainingDays(deadlineDate);
     setRemainingDays(days);
   }, [file.deadline]);
 
+  const handleDownload = () => {
+    console.log(fileUrl);
+    window.open(fileUrl, "_blank");
+  };
+
   return (
     <Card className="border rounded-md shadow-md relative">
       <CardHeader>
         <CardTitle className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            {headerIconTypes[file.type]}
             {file.name}
-            <div className="absolute right-2 top-3">
-                <FileCardActions file={file}/>
-            </div>
+          </div>
+          <div className="absolute right-2 top-5">
+            <FileCardActions file={file}/>
+          </div>
         </CardTitle>
         <CardDescription>{file.description}</CardDescription>
       </CardHeader>
       <CardContent>
-        <p>{file.orgId}</p>
+        <div className="flex justify-center items-center overflow-hidden border rounded-md h-[120px] w-full shadow-inner inset-3"
+            style={{
+                backgroundImage: `url(${fileUrl})`,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                backgroundRepeat: 'no-repeat'
+            }}>
+            {file.type !== "image" && iconTypes[file.type]}
+        </div>
       </CardContent>
       <CardFooter className="flex justify-between items-center">
-        <p className="text-sm text-gray-500">Deadline: {remainingDays !== null ? `in ${remainingDays} days` : "Unknown"}</p>
-        <Button>Download</Button>
+        <p className="text-sm text-gray-500">Deadline: {remainingDays !== null ? `in ${remainingDays} ${remainingDays > 1 ? 'days' : 'day'}` : "Unknown"}</p>
+        <Button onClick={handleDownload}>Download</Button>
       </CardFooter>
     </Card>
   );

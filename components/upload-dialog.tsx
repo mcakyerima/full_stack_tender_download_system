@@ -41,6 +41,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { useToast } from "@/components/ui/use-toast";
 import { Loader2 } from "lucide-react";
 import { FormSchema } from "@/schemas";
+import { FileMimeTypes } from "@/convex-types/mime-types";
 
 
 export function UploadDialog() {
@@ -55,7 +56,8 @@ export function UploadDialog() {
     defaultValues: {
       title: "",
       file: undefined,
-      deadline: "",
+      deadline: undefined,
+      description: "",
     },
   });
 
@@ -67,10 +69,13 @@ export function UploadDialog() {
       // Step 1: Get a short-lived upload URL
     const postUrl = await generateUploadUrl();
 
+    // get file type from value
+    const fileType = values.file[0].type;
+
      // Step 2: POST the file to the URL
      const result = await fetch(postUrl, {
       method: "POST",
-      headers: { "Content-Type": values.file[0].type },
+      headers: { "Content-Type": fileType },
       body: values?.file[0],
     });
 
@@ -81,6 +86,7 @@ export function UploadDialog() {
     try {
       await createFile({
         name: values.title,
+        type: FileMimeTypes[fileType],
         description: values.description,
         deadline: deadline,
         fileId: storageId,
