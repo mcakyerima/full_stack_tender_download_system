@@ -41,6 +41,9 @@ export default function FilesBrowser({title, favorites}: {title : string, favori
     api.files.getFiles,
     orgId ? { orgId, query, favorites} : "skip");
 
+  // get all favorites
+  const allFavorites = useQuery(api.files.getAllFavorites, orgId ? {orgId} : "skip")
+
   const isLoading = files === undefined;   
    
   return (
@@ -97,6 +100,7 @@ export default function FilesBrowser({title, favorites}: {title : string, favori
           <div className="grid lg:grid-cols-3 gap-4 md:grid-cols-2 sm:grid-cols-1 my-5">
             {files?.map((file) => (
               <FileCard
+                favorites={allFavorites ?? []}
                 key={file._id}
                 file={file}
               />

@@ -8,10 +8,12 @@ import { api } from '@/convex/_generated/api';
 
 interface FileCardActionsProps {
     file: Doc<"files">
+    isFavorited: boolean
 }
 
 export const FileCardActions = ({
-    file
+    file,
+    isFavorited,
 }: FileCardActionsProps) => {
     const [isConfirmedOpen, setIsConfirmedOpen] = useState(false);
     const setFavorite = useMutation(api.files.setFavorite);
@@ -35,7 +37,17 @@ export const FileCardActions = ({
                 </DropdownMenuTrigger>
                 <DropdownMenuContent>
                     <DropdownMenuItem onClick={() => handleFavorite(file._id)} className="flex gap-1 items-center cursor-pointer text-green-500">
-                        <StarIcon size={20} /> Favorite
+                        {
+                            isFavorited ? (
+                                <span className='flex items-center gap-1'>
+                                    <StarIcon size={20} fill='green' /> Unfavorite
+                                </span>
+                            ): (
+                                <span className='flex items-center gap-1'>
+                                    <StarIcon size={20} /> Favorite
+                                </span>
+                            )
+                        }
                     </DropdownMenuItem>
                     <DropdownMenuSeparator/>
                     <DropdownMenuItem onClick={() => setIsConfirmedOpen(true)} className="flex gap-1 items-center cursor-pointer text-red-500">

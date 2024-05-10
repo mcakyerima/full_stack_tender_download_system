@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "./ui/button";
-import { Doc } from "@/convex/_generated/dataModel";
+import { Doc, Id } from "@/convex/_generated/dataModel";
 import { calculateRemainingDays } from "@/lib/date-utils";
 import { FileCardActions } from "./file-card-actions";
 
@@ -16,8 +16,9 @@ import { useQuery } from "convex/react";
 
 
 export const FileCard = ({
-  file
-}: { file: Doc<"files"> }) => {
+  file,
+  favorites
+}: { file: Doc<"files">, favorites: Doc<"favorites">[] }) => {
   const fileUrl  = useQuery(api.files.imageUrl, { fileId: file.fileId });
 
   const [remainingDays, setRemainingDays] = useState<number | null>(null);
@@ -37,6 +38,9 @@ export const FileCard = ({
     xls: <PiMicrosoftExcelLogo size={50} />,
     doc: <PiMicrosoftWordLogoFill size={50} />
   } as Record<Doc<"files">["type"], ReactNode>;
+
+  // favorite docs
+ const isFavorited = favorites.some(favorite => favorite.fileId === file._id)
  
   useEffect(() => {
     const deadlineDate = new Date(file.deadline);
@@ -57,7 +61,7 @@ export const FileCard = ({
             {file.name}
           </div>
           <div className="absolute right-2 top-5">
-            <FileCardActions file={file}/>
+            <FileCardActions isFavorited={isFavorited} file={file}/>
           </div>
         </CardTitle>
         <CardDescription>{file.description}</CardDescription>

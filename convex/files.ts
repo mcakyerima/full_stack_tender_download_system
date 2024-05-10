@@ -217,6 +217,42 @@ export const setFavorite = mutation({
     }
 });
 
+
+
+// when favorite is selected, set favorite column to true for user
+export const getAllFavorites = query({
+    args: {
+        orgId: v.string(),
+    },
+    async handler(ctx, args) {
+        // stop unauthorized access
+        const identity = await ctx.auth.getUserIdentity();
+
+        if (!identity) {
+            return []
+        }
+
+        // check if user has access to the org
+        const hasAccess = await hasAccessToOrg(ctx, identity.tokenIdentifier, args.orgId);
+
+        // return empty array if user does not have access
+        if (!hasAccess) return [];
+
+        // get the user
+         const user = await ctx.db.query("users").withIndex("by_tokenIdentifier",
+        (q) => q.eq("tokenIdentifier", identity.tokenIdentifier)).first();
+
+        if (!user) throw new ConvexError("user does not exist");
+
+        // fetch favorite
+        const favorites = await ctx.db.query("favorites")
+            .withIndex("by_userId_fileId_orgId", (q) =>
+            q.eq("userId", user._id).eq("orgId", args.orgId)).collect();
+
+        return favorites
+    }
+});
+
 // async function hasAccessTofFile(
 //     ctx: QueryCtx | MutationCtx,
 //     fileId: Id<"files">
