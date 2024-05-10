@@ -2,6 +2,8 @@
 ![landing-light](https://github.com/mcakyerima/full_stack_tender_download_system/assets/58314409/080cc434-811f-41a6-bd5b-c6c54e662952)
 ![tendar-ipad](https://github.com/mcakyerima/full_stack_tender_download_system/assets/58314409/a1ebd276-8202-41b2-a288-48f7ef594a0a)
 ![tender-main](https://github.com/mcakyerima/full_stack_tender_download_system/assets/58314409/715cf12d-0e5f-4e1e-b16e-76d2a52ca9b4)
+![tendar-mobile-dark](https://github.com/mcakyerima/full_stack_tender_download_system/assets/58314409/a313f056-08eb-4090-9410-d57cc76e5de7)
+![tender-mobile-light](https://github.com/mcakyerima/full_stack_tender_download_system/assets/58314409/02475c0e-ea19-49b7-acdb-8ba4a90ebd99)
 
 📝 Tender Download System is a full-stack React-based web application designed for browsing, sharing, and downloading tender documents. Users can create organizations, share tenders, view tender details, sort and filter, add to favorites, delete, and more.
 
