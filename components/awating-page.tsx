@@ -13,7 +13,7 @@ export const UnderDesign = () => {
                 />
             </div>
             <h1 className="text-lg md:text-xl lg:text-2xl sm:text-xs mb-8 text-center ">
-                Page under design due to project deadline!
+                Page under design!
             </h1>
         </div>
     );

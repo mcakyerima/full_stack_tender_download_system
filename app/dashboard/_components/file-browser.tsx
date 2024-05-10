@@ -10,6 +10,7 @@ import { Loader2 } from "lucide-react";
 import { SearchBar } from "@/components/search-bar";
 import { Modal } from "@/components/upload-modal";
 import { Button } from "@/components/ui/button";
+import { NoData } from "@/components/no-data";
 
  
 
@@ -68,7 +69,7 @@ export default function FilesBrowser({title, favorites}: {title : string, favori
         </div>
       )}
 
-      { !isLoading && (
+      { !isLoading && files.length >= 0 && (
         <>
           <div className="flex space-x-36 md:space-x-8  lg:space-x-28   items-center">
             <h1 className="text-lg md:text-2xl lg:text-4xl font-bold">{title}</h1>
@@ -86,17 +87,14 @@ export default function FilesBrowser({title, favorites}: {title : string, favori
             <div className="mt-3 sm:hidden">
               <SearchBar query={query} setQuery={setQuery}/>
             </div>
-           {files.length === 0 && (
-              <div className="flex flex-col items-center space-y-6">
-                <EmptyFileVector/>
-                <Button onClick={() => {
-                  handleUploadClick();
-                }
-                } >
-                    Upload File
-                  </Button>
-              </div>
-            )}
+            {
+              query && files.length === 0 && (
+                <div className="flex items-center w-full flex-col">
+                  <NoData/>
+                </div>
+              )
+            }
+           
           <div className="grid lg:grid-cols-3 gap-4 md:grid-cols-2 sm:grid-cols-1 my-5">
             {files?.map((file) => (
               <FileCard

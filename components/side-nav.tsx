@@ -2,7 +2,8 @@
 
 import { Button } from "@/components/ui/button";
 import clsx from "clsx";
-import { FileIcon, Github, StarIcon, TrashIcon, User } from "lucide-react";
+import { FileIcon, StarIcon, TrashIcon } from "lucide-react";
+import { RiRobot3Fill } from "react-icons/ri";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { FaGithub } from "react-icons/fa";
@@ -17,7 +18,7 @@ export const SideNav = () => {
                     <Link href="/dashboard/files">
                     <Button
                         variant={"link"}
-                        className={clsx("flex items-center gap-3 text-gray-600 hover:text-blue-500", {
+                        className={clsx("flex mr-1 items-center gap-3 text-gray-600 hover:text-blue-500", {
                         "text-green-500": pathname.includes("/dashboard/files"),
                         })}
                     >
@@ -53,6 +54,20 @@ export const SideNav = () => {
                         "text-red-500": pathname.includes("/dashboard/trash"),
                         })} />
                         <span>Trash</span>
+                    </Button>
+                    </Link>
+
+                    <Link href="/dashboard/ai">
+                    <Button
+                        variant={"link"}
+                        className={clsx("flex ml-3 items-center gap-5 mr-4 text-gray-600 hover:text-red-500", {
+                        "text-cyan-700": pathname.includes("/dashboard/ai"),
+                        })}
+                    >
+                        <RiRobot3Fill className={clsx("w-6 h-6", {
+                        "text-cyan-700": pathname.includes("/dashboard/ai"),
+                        })} />
+                        <span>Ai agent</span>
                     </Button>
                     </Link>
 

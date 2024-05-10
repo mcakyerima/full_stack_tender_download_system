@@ -5,6 +5,7 @@ import FileDeleteDialog from './file-delete-dialog';
 import { Doc } from '@/convex/_generated/dataModel';
 import { useMutation } from 'convex/react';
 import { api } from '@/convex/_generated/api';
+import { Protect } from '@clerk/clerk-react';
 
 interface FileCardActionsProps {
     file: Doc<"files">
@@ -49,10 +50,15 @@ export const FileCardActions = ({
                             )
                         }
                     </DropdownMenuItem>
-                    <DropdownMenuSeparator/>
-                    <DropdownMenuItem onClick={() => setIsConfirmedOpen(true)} className="flex gap-1 items-center cursor-pointer text-red-500">
-                        <Trash2Icon size={20} /> Delete
-                    </DropdownMenuItem>
+                    <Protect
+                        role='org:admin'
+                        fallback={<></>}
+                        >
+                        <DropdownMenuSeparator/>
+                        <DropdownMenuItem onClick={() => setIsConfirmedOpen(true)} className="flex gap-1 items-center cursor-pointer text-red-500">
+                            <Trash2Icon size={20} /> Delete
+                        </DropdownMenuItem>
+                    </Protect>
                 </DropdownMenuContent>
             </DropdownMenu>
         </>
