@@ -1,0 +1,8 @@
+# Deployment used by `npx convex dev`
+CONVEX_DEPLOYMENT=dev:clear-swordfish-343 # team: mcakyerima, project: tender-download-system
+
+NEXT_PUBLIC_CONVEX_URL=https://clear-swordfish-343.convex.cloud
+
+# clerk auth keys
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_dG9sZXJhbnQtbW9uaXRvci01MS5jbGVyay5hY2NvdW50cy5kZXYk
+CLERK_SECRET_KEY=sk_test_c25CDmCEl6yXkczuEb70OfPZMzlvntwKiEy7pCN6En
