@@ -69,7 +69,9 @@ export const createFile = mutation({
 // getFiles query is used to fetch data from database
 export const getFiles = query({
     args:{
-        orgId: v.string()
+        orgId: v.string(),
+        query: v.optional(v.string()),
+        favorites: v.optional(v.boolean()),
     },
     async handler(ctx, args) {
         // stop unauthorized access
@@ -85,9 +87,36 @@ export const getFiles = query({
         if (!hasAccess) return [];
 
         // return ctx.db.)query('files').collect();
-        return ctx.db.query("files").withIndex("by_orgId",
+        let files = await ctx.db.query("files").withIndex("by_orgId",
          q => q.eq("orgId", args.orgId)
         ).collect();
+
+        // if no query return files else do a javascript filter with query and reuturn
+        const query = args.query
+
+        if (query) {
+            files = files.filter(file => file.name.toLowerCase().includes(query.toLowerCase()));
+        } 
+
+        if (args.favorites) {
+            // get the user
+            const user = await ctx.db.query("users").withIndex("by_tokenIdentifier",
+            (q) => q.eq("tokenIdentifier", identity.tokenIdentifier)).first();
+
+            if (!user) return files;
+
+            const favorites = await ctx.db.query(
+                "favorites"
+            ).withIndex("by_userId_fileId_orgId", (q) =>
+            q.eq("userId", user?._id).eq("orgId", args.orgId)).collect();
+
+            // filter files that are favorites
+            files = files.filter( file => favorites.some(favorite => favorite.fileId === file._id))
+        }
+
+
+        return files
+
     }
 })
 
@@ -140,4 +169,80 @@ export const imageUrl = query({
         const url = await ctx.storage.getUrl(args.fileId);
         return url;
     }
-})
+});
+
+// when favorite is selected, set favorite column to true for user
+export const setFavorite = mutation({
+    args: {
+        fileId: v.id("files"),
+    },
+    async handler(ctx, args) {
+        // stop unauthorized access
+        const identity = await ctx.auth.getUserIdentity();
+
+        if (!identity) {
+            throw new ConvexError("No user found");
+            return []
+        }
+
+        const file = await ctx.db.get(args.fileId);
+
+        if (!file) throw new ConvexError("file does not exist");
+        // check if user has access to the org
+        const hasAccess = await hasAccessToOrg(ctx, identity.tokenIdentifier, file.orgId);
+
+        // return empty array if user does not have access
+        if (!hasAccess) return [];
+
+        // get the user
+        const user = await ctx.db.query("users").withIndex("by_tokenIdentifier",
+        (q) => q.eq("tokenIdentifier", identity.tokenIdentifier)).first();
+
+        if (!user) throw new ConvexError("user does not exist");
+
+        // fetch favorite
+        const favorite = await ctx.db.query("favorites")
+            .withIndex("by_userId_fileId_orgId", (q) =>
+            q.eq("userId", user._id).eq("orgId", file.orgId).eq("fileId", args.fileId)).first();
+
+        if (!favorite) {
+            await ctx.db.insert("favorites", {
+                fileId: args.fileId,
+                orgId: file.orgId,
+                userId: user._id
+            });
+        } else {
+            await ctx.db.delete(favorite._id);
+        }
+    }
+});
+
+// async function hasAccessTofFile(
+//     ctx: QueryCtx | MutationCtx,
+//     fileId: Id<"files">
+// ) {
+//     // stop unauthorized access
+//     const identity = await ctx.auth.getUserIdentity();
+
+//     if (!identity) {
+//         return null;
+//     }
+
+//     const file = await ctx.db.get(fileId);
+
+//     if (!file) return null;
+//     // check if user has access to the org
+//     const hasAccess = await hasAccessToOrg(ctx, identity.tokenIdentifier, fileId);
+
+//     // return empty array if user does not have access
+//     if (!hasAccess) return [];
+
+//     // get the user
+//     const user = await ctx.db.query("users").withIndex("by_tokenIdentifier",
+//     (q) => q.eq("tokenIdentifier", identity.tokenIdentifier)).first();
+
+//     if (!user) return null;
+
+//     return { user,}
+
+// }

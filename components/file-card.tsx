@@ -45,7 +45,6 @@ export const FileCard = ({
   }, [file.deadline]);
 
   const handleDownload = () => {
-    console.log(fileUrl);
     window.open(fileUrl, "_blank");
   };
 

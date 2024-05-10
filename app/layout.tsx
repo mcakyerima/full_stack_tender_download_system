@@ -3,9 +3,8 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import ConvexClientProvider from "./convex-client/ConvexClientProvider";
-import Header from "@/components/header";
+import { Toaster } from "@/components/ui/toaster";
 
-import { Toaster } from "@/components/ui/toaster"
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -13,16 +12,17 @@ export const metadata: Metadata = {
   description: "A React application for browsing and downloading tender documents.",
 };
 
-
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-    <ConvexClientProvider clerkPublishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY} >
+    <ConvexClientProvider clerkPublishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}>
       <html lang="en">
-      <link rel="icon" href="/favicon.png" />
+        <head>
+          <link rel="icon" href="/favicon.png" />
+        </head>
         <body className={inter.className}>
           <ThemeProvider
             attribute="class"
@@ -30,10 +30,10 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
-              <Toaster />
-              <Header/>
-              {children}
-            </ThemeProvider>
+            <Toaster />
+              {/* <Header /> */}
+                {children}
+          </ThemeProvider>
         </body>
       </html>
     </ConvexClientProvider>

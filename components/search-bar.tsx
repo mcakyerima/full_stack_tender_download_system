@@ -17,14 +17,15 @@ import {
 import { Input } from './ui/input';
 import { Loader2, SearchIcon } from 'lucide-react';
 import { Button } from "@/components/ui/button";
+import { Dispatch, SetStateAction } from 'react';
 
 
 
-async function onSubmit(values: z.infer<typeof SearchSchema>) {
-    console.log(values);
-}
 
-export const SearchBar = () => {
+export const SearchBar = ({
+   query,
+   setQuery
+  }: { query: string, setQuery: Dispatch<SetStateAction<string>>}) => {
 
     const form = useForm<z.infer<typeof SearchSchema>>({
         resolver: zodResolver(SearchSchema),
@@ -33,34 +34,46 @@ export const SearchBar = () => {
         },
       });
 
+    // handling submit
+    const onSubmit = async (data: z.infer<typeof SearchSchema>) => {
+        setQuery(data.query);
+    };
+
     return (
-        <Form {...form}>
-                  <form onSubmit={form.handleSubmit(onSubmit)} className="flex items-center justify-between">
-                    <FormField
-                      control={form.control}
-                      name="query"
-                      render={({ field }: any) => (
-                        <FormItem>
-                          <FormLabel>Title</FormLabel>
-                          <FormControl>
-                            <Input {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <Button
-                     type="submit"
-                     disabled={form.formState.isSubmitting}
-                     >
-                      {form.formState.isSubmitting
-                      ?
-                        <Loader2 className="mr-2 animate-spin"/>
-                      : 
-                        <SearchIcon/>
-                      }
-                    </Button>
-                  </form>
-                </Form>
+        <div>
+                <Form {...form}>
+                <form onSubmit={form.handleSubmit(onSubmit)} className="flex items-center justify-between">
+                    <div className='relative w-full'>
+                        <div className="flex items-center rounded-full h-[42px] shadow-sm border ">
+                            <FormField
+                                control={form.control}
+                                name="query"
+                                render={({ field }: any) => (
+                                    <FormControl>
+                                    <Input
+                                        placeholder='Search files'
+                                        className="w-full h-full border-none px-4 focus:outline-none focus:border-transparent"
+                                        {...field}
+                                    />
+                                </FormControl>
+                                )}
+                            />
+                            <Button
+                                type="submit"
+                                disabled={form.formState.isSubmitting}
+                                className="rounded-full w-[40px] h-[36px] mr-1 p-0 focus:outline-none"
+                            >
+                                {form.formState.isSubmitting ? (
+                                    <Loader2 className="animate-spin" />
+                                ) : (
+                                    <SearchIcon size={20} />
+                                )}
+                            </Button>
+                        </div>
+                    </div>
+                </form>
+            </Form>
+        </div>
+  
     )
 }

@@ -4,7 +4,6 @@ import { api } from "@/convex/_generated/api";
 import { useOrganization, useUser } from "@clerk/nextjs";
 import { useQuery } from "convex/react";
 import { useState } from 'react';
-import { UploadDialog } from "@/components/upload-dialog";
 import { FileCard } from "@/components/file-card";
 import { EmptyFileVector } from "@/components/empty_file";
 import { Loader2 } from "lucide-react";
@@ -12,14 +11,18 @@ import { SearchBar } from "@/components/search-bar";
 import { Modal } from "@/components/upload-modal";
 import { Button } from "@/components/ui/button";
 
-export default function Home() {
+ 
+
+export default function FilesBrowser({title, favorites}: {title : string, favorites?:boolean}) {
   // create a state for modal
-  const [isModalOpen, setIsModalOpen ] = useState<boolean>(true);
+  const [isModalOpen, setIsModalOpen ] = useState<boolean>(false);
+  // state for query
+  const [query, setQuery] = useState<string>("");
 
   // function to handle modal trigger
   function handleUploadClick() {
     setIsModalOpen(true);
-  }
+  } 
 
   // get individual organizations in clerks auth
   const organization = useOrganization();
@@ -36,9 +39,9 @@ export default function Home() {
   // retrieving data from convex
   const files = useQuery(
     api.files.getFiles,
-    orgId ? { orgId} : "skip");
+    orgId ? { orgId, query, favorites} : "skip");
 
-  const isLoading = files === undefined;
+  const isLoading = files === undefined;   
    
   return (
     <main className="container mx-auto pt-12">
@@ -50,7 +53,7 @@ export default function Home() {
           </div>
         )
       }
-      {!isLoading && files.length === 0 && (
+      {!isLoading && !query && files.length === 0 && (
         <div className="flex flex-col items-center space-y-6">
           <EmptyFileVector/>
           <Button onClick={() => {
@@ -62,18 +65,36 @@ export default function Home() {
         </div>
       )}
 
-      { !isLoading && files.length > 0 && (
+      { !isLoading && (
         <>
-          <div className="flex justify-between items-center">
-            <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold">Your Files</h1>
+          <div className="flex space-x-36 md:space-x-8  lg:space-x-28   items-center">
+            <h1 className="text-lg md:text-2xl lg:text-4xl font-bold">{title}</h1>
+            <div className="hidden sm:block flex-1">
+              <div className="flex-1">
+                <SearchBar query={query} setQuery={setQuery}/>
+              </div>
+            </div>
             <Button onClick={() => {
               handleUploadClick();
             }}>
               Upload File
             </Button>
            </div>
-           <SearchBar/>
-          <div className="grid lg:grid-cols-4 gap-4 md:grid-cols-2 sm:grid-cols-1 mt-5">
+            <div className="mt-3 sm:hidden">
+              <SearchBar query={query} setQuery={setQuery}/>
+            </div>
+           {files.length === 0 && (
+              <div className="flex flex-col items-center space-y-6">
+                <EmptyFileVector/>
+                <Button onClick={() => {
+                  handleUploadClick();
+                }
+                } >
+                    Upload File
+                  </Button>
+              </div>
+            )}
+          <div className="grid lg:grid-cols-3 gap-4 md:grid-cols-2 sm:grid-cols-1 my-5">
             {files?.map((file) => (
               <FileCard
                 key={file._id}
