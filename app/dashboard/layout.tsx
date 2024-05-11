@@ -19,11 +19,10 @@ export default function DashboardLayout({
         </head>
         <body className={inter.className}>
             <Toaster />
-            <div className="">
+            <Header />
               <SideNav />
               <div className="flex-grow sm:ml-[180px]">
                 {children}
-              </div>
             </div>
         </body>
       </html>

@@ -1,5 +1,6 @@
 // RootLayout.js
 import { Inter } from "next/font/google";
+import "@/app/globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import ConvexClientProvider from "@/convex-client/ConvexClientProvider";
 import { Toaster } from "@/components/ui/toaster";

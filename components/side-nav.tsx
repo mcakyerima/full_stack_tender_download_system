@@ -12,7 +12,7 @@ import Link from 'next/link';
 export const SideNav = () => {
     const pathname = usePathname();
     return (  
-            <div className="hidden relative sm:block sm:mt-20 pt-4 md:w-[180px] border-r min-h-screen md:fixed lg:fixed xl:fixed">
+            <div className="hidden relative sm:block  pt-4 md:w-[180px] border-r min-h-screen md:fixed lg:fixed xl:fixed">
             <div className="w-full  flex flex-col justify-center gap-2 ">
                 <div className="w-full flex flex-col items-center gap-3  self-start">
                     <Button
