@@ -3,22 +3,14 @@
 import { Button } from "@/components/ui/button";
 import { api } from "@/convex/_generated/api";
 import { useOrganization, useUser } from "@clerk/nextjs";
-import { useMutation, useQuery } from "convex/react";
-import { useState } from 'react';
-
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog"
+import { useMutation} from "convex/react";
+import { useForm } from "react-hook-form";
+import { useToast } from "@/components/ui/use-toast";
+import { IoMdClose } from "react-icons/io";
 
 // FORMS IMPORT 
-import { z } from "zod"
+import { any, z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form";
 import {
   Form,
   FormControl,
@@ -38,7 +30,6 @@ import { CalendarIcon } from "@radix-ui/react-icons";
 import { format } from "date-fns"
 import { cn } from "@/lib/utils"
 import { Textarea } from "@/components/ui/textarea"
-import { useToast } from "@/components/ui/use-toast";
 import { Loader2 } from "lucide-react";
 import { FormSchema } from "@/schemas";
 import { FileMimeTypes } from "@/convex-types/mime-types";
@@ -46,7 +37,6 @@ import { FileMimeTypes } from "@/convex-types/mime-types";
 
 
 
-import { IoMdClose } from "react-icons/io";
 import {
     Card,
     CardContent,
@@ -56,31 +46,36 @@ import {
 
   
   export const Modal = ({ isVisible, onClose }: { isVisible: boolean; onClose: () => void }) => {
+    const { toast } = useToast();
+    const generateUploadUrl = useMutation(api.files.generateUploadUrl);
+    const createFile = useMutation(api.files.createFile);
+    const organization = useOrganization();
+    const user = useUser();
+    const form = useForm<z.infer<typeof FormSchema>>({
+      resolver: zodResolver(FormSchema),
+      defaultValues: {
+        title: "",
+        file: any,
+        deadline: undefined,
+        description: "",
+      },
+    });
+
     // Function to handle click outside the modal body
     function handleOutsideClick(e: React.MouseEvent<HTMLDivElement>) {
       if (e.target === e.currentTarget) {
         onClose();
       }
     }
-    // donst show modal if isVisible is false
+
     if (!isVisible) {
-        return null;
-    }    
-
-  const { toast } = useToast()
-  // generating upload url
-  const generateUploadUrl = useMutation(api.files.generateUploadUrl)
-
-  // 1. Define your form.
-  const form = useForm<z.infer<typeof FormSchema>>({
-    resolver: zodResolver(FormSchema),
-    defaultValues: {
-      title: "",
-      file: undefined,
-      deadline: undefined,
-      description: "",
-    },
-  });
+      return null;
+    }
+  
+    let orgId: string | any = null;
+    if (organization.isLoaded && user.isLoaded) {
+      orgId = organization.organization?.id ?? user.user?.id;
+    }
 
   const fileRef = form.register("file")
 
@@ -133,23 +128,6 @@ import {
       })
     }
   }
-
-  // adding data to convex
-  const createFile = useMutation(api.files.createFile);
-  
-  // get individual organizations in clerks auth
-  const organization = useOrganization();
-
-  // get personal accounts in clerk auth
-  const user = useUser();
-
-
-  // user organization id or user id if not org
-  let orgId: string | any = null;
-  if (organization.isLoaded && user.isLoaded) {
-      orgId = organization.organization?.id ?? user.user?.id
-      // console.log({OrgId: orgId});
-
     return (
         <div>
             <div id="modal_body"
@@ -216,7 +194,7 @@ import {
                                 render={({ field }: string | any) => (
                                     <FormItem className="flex w-full sm:w-[50%] flex-col">
                                     <FormLabel>Tender deadline</FormLabel>
-                                    <Popover asChild>
+                                    <Popover>
                                         <PopoverTrigger asChild>
                                         <FormControl>
                                             <Button
@@ -274,6 +252,4 @@ import {
         </div>
     )
 }
-}
-
 export default Modal;

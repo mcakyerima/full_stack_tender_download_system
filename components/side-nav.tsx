@@ -4,19 +4,20 @@ import { Button } from "@/components/ui/button";
 import clsx from "clsx";
 import { FileIcon, StarIcon, TrashIcon } from "lucide-react";
 import { RiRobot3Fill } from "react-icons/ri";
-import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { FaGithub } from "react-icons/fa";
+import { useRouter } from "next/navigation";
 
 
 export const SideNav = () => {
     const pathname = usePathname();
+    const router = useRouter();
     return (  
             <div className="hidden relative sm:block sm:mt-20 pt-4 md:w-[180px] border-r min-h-screen md:fixed lg:fixed xl:fixed">
             <div className="w-full  flex flex-col justify-center gap-2 ">
                 <div className="w-full flex flex-col items-center gap-3  self-start">
-                    <Link href="/dashboard/files">
                     <Button
+                        onClick={() => router.push("/dashboard/files")}
                         variant={"link"}
                         className={clsx("flex mr-1 items-center gap-3 text-gray-600 hover:text-blue-500", {
                         "text-green-500": pathname.includes("/dashboard/files"),
@@ -27,10 +28,9 @@ export const SideNav = () => {
                         })}  />
                         <span>All Files</span>
                     </Button>
-                    </Link>
 
-                    <Link href="/dashboard/favorites">
                     <Button
+                        onClick={() => router.push("/dashboard/favorites")}
                         variant={"link"}
                         className={clsx("flex items-center gap-3 text-gray-600 hover:text-blue-500", {
                         "text-cyan-500": pathname.includes("/dashboard/favorites"),
@@ -41,10 +41,10 @@ export const SideNav = () => {
                         })} />
                         <span>Favorites</span>
                     </Button>
-                    </Link>
 
-                    <Link href="/dashboard/trash">
+                
                     <Button
+                        onClick={() => router.push("/dashboard/trash")}
                         variant={"link"}
                         className={clsx("flex items-center gap-5 mr-4 text-gray-600 hover:text-red-500", {
                         "text-red-500": pathname.includes("/dashboard/trash"),
@@ -55,10 +55,9 @@ export const SideNav = () => {
                         })} />
                         <span>Trash</span>
                     </Button>
-                    </Link>
 
-                    <Link href="/dashboard/ai">
                     <Button
+                        onClick={() => router.push("/dashboard/ai")}
                         variant={"link"}
                         className={clsx("flex ml-3 items-center gap-5 mr-4 text-gray-600 hover:text-red-500", {
                         "text-cyan-700": pathname.includes("/dashboard/ai"),
@@ -69,18 +68,15 @@ export const SideNav = () => {
                         })} />
                         <span>Ai agent</span>
                     </Button>
-                    </Link>
 
-                    <Link 
-                        href="https://github.com/mcakyerima/full_stack_tender_download_system">
                     <Button
+                        onClick={() => router.push("https://github.com/mcakyerima/full_stack_tender_download_system")}
                         variant={"link"}
                         className="flex-1 mt-auto botton-0 items-center gap-4 mr-5 text-gray-600 hover:text-red-500"
                     >
                         <FaGithub className="w-6 h-6 text-gray-900" />
                         <span>Repo</span>
                     </Button>
-                    </Link>
                 </div>
             </div>
             </div>

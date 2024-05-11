@@ -1,12 +1,10 @@
-import { UnderDesign } from "@/components/awating-page"
-import FilesBrowser from "../_components/file-browser";
+"use client";
+import FilesBrowser from "../../../components/file-browser";
 
-const FavoritesPage = () => {
+export default function FavoritesPage(){
     return (
         <div>
             <FilesBrowser title="Your Favorites" favorites={true}/>
         </div>
     )
 }
-
-export default FavoritesPage;

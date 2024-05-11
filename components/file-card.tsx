@@ -14,12 +14,11 @@ import { ReactNode } from "react";
 import { api } from "@/convex/_generated/api";
 import { useQuery } from "convex/react";
 
-
-export const FileCard = ({
+export default function FileCard({
   file,
   favorites
-}: { file: Doc<"files">, favorites: Doc<"favorites">[] }) => {
-  const fileUrl  = useQuery(api.files.imageUrl, { fileId: file.fileId });
+}: { file: Doc<"files">, favorites: Doc<"favorites">[] }){
+  const fileUrl: any = useQuery(api.files.imageUrl, { fileId: file.fileId });
 
   const [remainingDays, setRemainingDays] = useState<number | null>(null);
   

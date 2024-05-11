@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/dialog"
 
 // FORMS IMPORT 
-import { z } from "zod"
+import { any, z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form";
 import {
@@ -49,13 +49,21 @@ export function UploadDialog() {
   const { toast } = useToast()
   // generating upload url
   const generateUploadUrl = useMutation(api.files.generateUploadUrl)
+ // adding data to convex
+ const createFile = useMutation(api.files.createFile);
+  
+ // get individual organizations in clerks auth
+ const organization = useOrganization();
+
+ // get personal accounts in clerk auth
+ const user = useUser();
 
   // 1. Define your form.
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
       title: "",
-      file: undefined,
+      file: any,
       deadline: undefined,
       description: "",
     },
@@ -112,17 +120,6 @@ export function UploadDialog() {
       })
     }
   }
-
-  // adding data to convex
-  const createFile = useMutation(api.files.createFile);
-  
-  // get individual organizations in clerks auth
-  const organization = useOrganization();
-
-  // get personal accounts in clerk auth
-  const user = useUser();
-
-
   // user organization id or user id if not org
   let orgId: string | any = null;
   if (organization.isLoaded && user.isLoaded) {
@@ -177,7 +174,6 @@ export function UploadDialog() {
                     />
                     <div className="w-full flex items-center gap-[12px] relative">
                     <FormField
-                      className="w-[45%] self-start"
                       control={form.control}
                       name="file"
                       render={() => (
@@ -191,13 +187,12 @@ export function UploadDialog() {
                       )}
                     />
                     <FormField
-                      className="w-[40%] self-end mr-0"
                       control={form.control}
                       name="deadline"
                       render={({ field }: string | any) => (
                         <FormItem className="flex flex-col w-[40%] self-end">
                           <FormLabel>Tender deadline</FormLabel>
-                          <Popover asChild>
+                          <Popover>
                             <PopoverTrigger asChild>
                               <FormControl>
                                 <Button

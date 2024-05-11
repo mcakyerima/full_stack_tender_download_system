@@ -1,11 +1,10 @@
 "use client"
 import { Button } from '@/components/ui/button'
-import Link from 'next/link'
-import { useState } from 'react'
+import { useRouter } from 'next/navigation' 
+
 
 export default function LandingPage() {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-
+  const router = useRouter();
   return (
     <div className="min-h-screen">
 
@@ -41,12 +40,9 @@ export default function LandingPage() {
             </p>
             <div className="mt-10 flex items-center justify-center gap-x-6">
               <Button
+                onClick={() => router.push("/dashboard/files")}
               >
-                <Link
-                    href="/dashboard/files"
-                >
                     Get Started
-                </Link>
               </Button>
               
             </div>

@@ -1,6 +1,6 @@
 "use client";
 
-import FilesBrowser from "../_components/file-browser";
+import FilesBrowser from "../../../components/file-browser";
 
 export default function FilesPage() {
   return(

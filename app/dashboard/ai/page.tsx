@@ -1,6 +1,7 @@
-import Image from "next/image";
+"user client";
 
-const AiAgent = () => {
+import Image from "next/image";
+export default function AiAgent() {
     return (
         <div className="flex flex-col items-center justify-center mt-20">
             <div className="flex flex-col items-center space-y-5">
@@ -17,5 +18,3 @@ const AiAgent = () => {
         </div>
     );
 };
-
-export default AiAgent;

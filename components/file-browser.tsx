@@ -4,7 +4,10 @@ import { api } from "@/convex/_generated/api";
 import { useOrganization, useUser } from "@clerk/nextjs";
 import { useQuery } from "convex/react";
 import { useState } from 'react';
-import { FileCard } from "@/components/file-card";
+import dynamic from 'next/dynamic'
+const FileCard = dynamic(() => import('@/components/file-card'), {
+  ssr: false,
+})
 import { EmptyFileVector } from "@/components/empty_file";
 import { Loader2 } from "lucide-react";
 import { SearchBar } from "@/components/search-bar";

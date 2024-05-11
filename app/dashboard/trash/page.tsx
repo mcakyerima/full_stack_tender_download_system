@@ -1,11 +1,10 @@
+"use client"
 import { UnderDesign } from "@/components/awating-page"
 
-const TrashPage = () => {
+export default function TrashPage(){
     return (
         <div>
             <UnderDesign/>
         </div>
     )
 }
-
-export default TrashPage;

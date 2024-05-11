@@ -2,13 +2,12 @@ import { OrganizationSwitcher, SignInButton, SignedOut, UserButton } from "@cler
 import { Button } from "./ui/button";
 import { ModeToggle } from "@/components/theme-toggle";
 import Image from 'next/image';
-import Link from "next/link";
 
 function Header() {
   return (
     <div className="sticky top-0 z-40 border-b py-2 shadow-sm backdrop-filter backdrop-blur-lg bg-opacity-80">
       <div className="container flex justify-between items-center mx-auto">
-        <Link
+        <a
           href="/"
           className="flex items-center"
         >
@@ -18,7 +17,7 @@ function Header() {
               src="/Mercy-Corps.svg"
               alt="MercyCorps Logo"
             />
-        </Link>
+        </a>
         <nav className="flex gap-3">
           <div className="hidden md:block">
             <OrganizationSwitcher/>

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Trash2Icon, MoreVertical, StarIcon } from "lucide-react";
 import FileDeleteDialog from './file-delete-dialog';
-import { Doc } from '@/convex/_generated/dataModel';
+import { Doc, Id } from '@/convex/_generated/dataModel';
 import { useMutation } from 'convex/react';
 import { api } from '@/convex/_generated/api';
 import { Protect } from '@clerk/clerk-react';
@@ -19,7 +19,7 @@ export const FileCardActions = ({
     const [isConfirmedOpen, setIsConfirmedOpen] = useState(false);
     const setFavorite = useMutation(api.files.setFavorite);
 
-    const handleFavorite = async (file_id) => {
+    const handleFavorite = async (file_id: Id<"files">) => {
         console.log({file_id});
         try {
             await setFavorite({

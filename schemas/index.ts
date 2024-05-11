@@ -4,7 +4,7 @@ export const FormSchema = z.object({
     title: z.string().min(2, {
       message: "Tender title must be at least 2 characters.",
     }),
-    file: typeof FileList !== 'undefined' ? z.instanceof(FileList) : z.unknown(),
+    file: typeof FileList !== 'undefined' ? z.instanceof(FileList) : z.any(),
     deadline: z.date(),
     description: z
       .string()
