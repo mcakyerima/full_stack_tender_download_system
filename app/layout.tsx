@@ -1,17 +1,11 @@
-import type { Metadata } from "next";
+// RootLayout.js
 import { Inter } from "next/font/google";
-import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import ConvexClientProvider from "@/convex-client/ConvexClientProvider";
 import { Toaster } from "@/components/ui/toaster";
 import Header from "@/components/header";
 
 const inter = Inter({ subsets: ["latin"] });
-
-export const metadata: Metadata = {
-  title: "Tender Download System",
-  description: "A React application for browsing and downloading tender documents.",
-};
 
 export default function RootLayout({
   children,
@@ -32,8 +26,8 @@ export default function RootLayout({
             disableTransitionOnChange
           >
             <Toaster />
-              <Header />
-                {children}
+            <Header />
+            {children}
           </ThemeProvider>
         </body>
       </html>

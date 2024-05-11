@@ -1,10 +1,9 @@
 "use client"
 import { Button } from '@/components/ui/button'
-import { useRouter } from 'next/navigation' 
+import Link from "next/link";
 
 
 export default function LandingPage() {
-  const router = useRouter();
   return (
     <div className="min-h-screen">
 
@@ -40,9 +39,10 @@ export default function LandingPage() {
             </p>
             <div className="mt-10 flex items-center justify-center gap-x-6">
               <Button
-                onClick={() => router.push("/dashboard/files")}
               >
-                    Get Started
+                <Link href="/dashboard/files">
+                  Get Started
+                </Link>
               </Button>
               
             </div>

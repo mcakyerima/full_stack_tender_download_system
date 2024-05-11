@@ -1,3 +1,4 @@
+// DashboardLayout.js
 import { Inter } from "next/font/google";
 import "@/app/globals.css";
 import Header from "@/components/header";
@@ -20,7 +21,6 @@ export default function DashboardLayout({
             <Toaster />
             <div className="">
               <SideNav />
-              <Header />
               <div className="flex-grow sm:ml-[180px]">
                 {children}
               </div>
