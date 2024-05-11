@@ -1,9 +1,10 @@
+"use client"
 import { OrganizationSwitcher, SignInButton, SignedOut, UserButton } from "@clerk/nextjs";
+import Image from 'next/image';
 import { Button } from "./ui/button";
 import { ModeToggle } from "@/components/theme-toggle";
-import Image from 'next/image';
 
-function Header() {
+export default function Header() {
   return (
     <div className="sticky top-0 z-40 border-b py-2 shadow-sm backdrop-filter backdrop-blur-lg bg-opacity-80">
       <div className="container flex justify-between items-center mx-auto">
@@ -34,5 +35,3 @@ function Header() {
     </div>
   );
 }
-
-export default Header;

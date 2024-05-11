@@ -1,10 +1,12 @@
+"use client";
 // RootLayout.js
 import { Inter } from "next/font/google";
 import "@/app/globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
+import Header from "@/components/header";
 import ConvexClientProvider from "@/convex-client/ConvexClientProvider";
 import { Toaster } from "@/components/ui/toaster";
-import Header from "@/components/header";
+import { usePathname } from "next/navigation";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -13,6 +15,7 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const pathname = usePathname();
   return (
     <ConvexClientProvider clerkPublishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}>
       <html lang="en">
@@ -27,7 +30,7 @@ export default function RootLayout({
             disableTransitionOnChange
           >
             <Toaster />
-            <Header />
+            {pathname.includes("/") && <Header/>}
             {children}
           </ThemeProvider>
         </body>

@@ -40,7 +40,7 @@ export default function LandingPage() {
             <div className="mt-10 flex items-center justify-center gap-x-6">
               <Button
               >
-                <Link href="/dashboard/files">
+                <Link href="/dashboard/file">
                   Get Started
                 </Link>
               </Button>

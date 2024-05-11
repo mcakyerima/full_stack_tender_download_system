@@ -18,13 +18,13 @@ export const SideNav = () => {
                     <Button
                         variant={"link"}
                         className={clsx("flex mr-1 items-center gap-3 text-gray-600 hover:text-blue-500", {
-                        "text-green-500": pathname.includes("/dashboard/files"),
+                        "text-green-500": pathname.includes("/dashboard/file"),
                         })}
                     >
                         <FileIcon className={clsx("w-6 h-6", {
-                        "text-green-500": pathname.includes("/dashboard/files"),
+                        "text-green-500": pathname.includes("/dashboard/file"),
                         })}  />
-                        <Link href="/dashboard/files">All Files</Link>
+                        <Link href="/dashboard/file">All Files</Link>
                     </Button>
 
                     <Button
