@@ -11,7 +11,6 @@ http.route({
     handler: httpAction(async (ctx, request) => {
         const payloadString = await request.text();
         const headerPayload = request.headers;
-        console.log()
         try {
             const result = await ctx.runAction(internal.clerk.fulfill, {
                 payload: payloadString,
