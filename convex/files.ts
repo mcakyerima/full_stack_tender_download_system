@@ -20,7 +20,7 @@ export const generateUploadUrl = mutation(async (ctx) => {
 async function hasAccessToOrg (
     ctx: QueryCtx | MutationCtx,
     tokenIdentifier: string,
-    orgId: string | undefined
+    orgId: string
 ) {
     const user = await getUser(ctx, tokenIdentifier);
     const hasAccess = 
@@ -181,7 +181,6 @@ export const setFavorite = mutation({
         const identity = await ctx.auth.getUserIdentity();
 
         if (!identity) {
-            throw new ConvexError("No user found");
             return []
         }
 
