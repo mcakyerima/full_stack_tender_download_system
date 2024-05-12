@@ -20,7 +20,7 @@ export const generateUploadUrl = mutation(async (ctx) => {
 async function hasAccessToOrg (
     ctx: QueryCtx | MutationCtx,
     tokenIdentifier: string,
-    orgId: string
+    orgId: string | undefined
 ) {
     const user = await getUser(ctx, tokenIdentifier);
     const hasAccess = 
