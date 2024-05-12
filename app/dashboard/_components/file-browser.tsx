@@ -69,7 +69,7 @@ export default function FilesBrowser({
           <h1 className="text-2xl">Loading files...</h1>
         </div>
       )}
-      {!isLoading && !query && files.length === 0 && (
+      {!isLoading && !query && (files === undefined || files.length === 0) && (
         <div className="flex flex-col items-center space-y-6">
           <EmptyFileVector />
           <Button
@@ -82,7 +82,8 @@ export default function FilesBrowser({
         </div>
       )}
 
-      {!isLoading && files.length >= 0 && (
+
+      {!isLoading && files.length > 0 && (
         <>
           <div className="flex space-x-36 md:space-x-8  lg:space-x-28   items-center">
             <h1 className="text-lg md:text-2xl lg:text-4xl font-bold">
@@ -101,13 +102,15 @@ export default function FilesBrowser({
               Upload File
             </Button>
           </div>
-          <div className="mt-3 sm:hidden">
-            <SearchBar query={query} setQuery={setQuery} />
-          </div>
-          {query && files.length === 0 && (
-            <div className="flex items-center w-full flex-col">
-              <NoData />
-            </div>
+          {query &&  files.length === 0 && (
+            <>
+              <div className="mt-3 sm:hidden">
+                <SearchBar query={query} setQuery={setQuery} />
+              </div>
+              <div className="flex items-center w-full flex-col">
+                <NoData />
+              </div>
+            </>
           )}
 
           <div className="grid lg:grid-cols-3 gap-4 md:grid-cols-2 sm:grid-cols-1 my-5">

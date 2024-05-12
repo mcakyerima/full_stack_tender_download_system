@@ -15,7 +15,7 @@ export default defineSchema({
     type: fileTypes ,
     description: v.string(),
     deadline: v.string(),
-    orgId: v.string(),
+    orgId: v.optional(v.string()),
     fileId: v.id("_storage"),
   }).index("by_orgId", ["orgId"]),
   favorites: defineTable({

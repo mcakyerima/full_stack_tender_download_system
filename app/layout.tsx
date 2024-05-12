@@ -16,6 +16,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   const pathname = usePathname();
+  console.log("Current Pathname:", pathname);
   return (
     <ConvexClientProvider clerkPublishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}>
       <html lang="en">
@@ -30,7 +31,7 @@ export default function RootLayout({
             disableTransitionOnChange
           >
             <Toaster />
-            {pathname.includes("/") && <Header/>}
+            {pathname === '/' && <Header/>}
             {children}
           </ThemeProvider>
         </body>
