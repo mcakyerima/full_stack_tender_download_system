@@ -1,9 +1,10 @@
 import { httpRouter } from 'convex/server';
-
 import { internal } from './_generated/api';
 import { httpAction } from './_generated/server';
 
 const http = httpRouter();
+
+const clerkDomain = process.env.CLERK_DOMAIN;
 
 http.route({
     path: '/clerk',
@@ -22,17 +23,20 @@ http.route({
             });
 
             switch (result.type) {
-                case 'user.created': 
+                case 'user.created':
                     await ctx.runMutation(internal.users.createUser, {
-                        tokenIdentifier: `https://tolerant-monitor-51.clerk.accounts.dev|${result.data.id}`,
+                        tokenIdentifier: `${clerkDomain}|${result.data.id}`,
                     });
-                    break
-                case 'organizationMembership.created': 
-                    console.log({OrgIdentifier: result.data.public_user_data});
+                    break;
+                case 'organizationMembership.created':
+                    console.log({ OrgIdentifier: result.data.public_user_data });
                     await ctx.runMutation(internal.users.addOrgIdToUser, {
-                        tokenIdentifier: `https://tolerant-monitor-51.clerk.accounts.dev|${result.data.public_user_data.user_id}`,
-                        orgId: result.data.organization.id
-                    })
+                        tokenIdentifier: `${clerkDomain}|${result.data.public_user_data.user_id}`,
+                        orgId: result.data.organization.id,
+                    });
+                    break;
+                default:
+                    break;
             }
 
             return new Response(null, {
@@ -42,8 +46,8 @@ http.route({
             console.log(err);
             return new Response('Webhook Error', {
                 status: 400,
-            })
-        };
+            });
+        }
     }),
 });
 

@@ -4,8 +4,8 @@ import { Inter } from "next/font/google";
 import "@/app/globals.css";
 import Header from "@/components/header";
 import { Toaster } from "@/components/ui/toaster";
-import { SideNav } from "@/components/side-nav";
 import { usePathname } from "next/navigation";
+import { Sidebar } from "./_components/sidebar";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -15,6 +15,8 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }>) {
   const pathname = usePathname();
+  const isDashboard = pathname === "/dashboard" || pathname.includes("/dashboard/"); // Check if the pathname is either exactly '/dashboard' or includes '/dashboard/'
+  
   return (
       <html lang="en">
         <head>
@@ -22,10 +24,14 @@ export default function DashboardLayout({
         </head>
         <body className={inter.className}>
             <Toaster />
-            {pathname.includes("/dashboard/") && <Header/>}
-              <SideNav />
-              <div className="flex-grow sm:ml-[180px]">
+            {isDashboard && <Header dashboard={true} />} {/* Render Header only if in dashboard route */}
+            <div className="flex"> {/* Wrap SideNav and children in a flex container */}
+            <div className="hidden md:flex h-full w-52 flex-col fixed inset-y-0 z-40">
+                <Sidebar/>
+            </div>
+              <div className={isDashboard ? "flex-grow sm:ml-[200px]" : "flex-grow"}> {/* Apply conditional class based on whether in dashboard route */}
                 {children}
+              </div>
             </div>
         </body>
       </html>

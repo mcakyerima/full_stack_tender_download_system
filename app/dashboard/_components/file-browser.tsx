@@ -8,7 +8,7 @@ import dynamic from "next/dynamic";
 const FileCard = dynamic(
   () => import("@/app/dashboard/_components/file-card"),
   {
-    ssr: false,
+    ssr: false
   }
 );
 import { EmptyFileVector } from "@/components/empty_file";
@@ -81,33 +81,7 @@ export default function FilesBrowser({
           </Button>
         </div>
       )}
-       {query &&  files?.length === 0 && (
-            <>
-             <div className="flex space-x-36 md:space-x-8  lg:space-x-28   items-center">
-            <h1 className="text-lg md:text-2xl lg:text-4xl font-bold">
-              {title}
-            </h1>
-            <div className="hidden sm:block flex-1">
-              <div className="flex-1">
-                <SearchBar query={query} setQuery={setQuery} />
-              </div>
-            </div>
-            <Button
-              onClick={() => {
-                handleUploadClick();
-              }}
-            >
-              Upload File
-            </Button>
-          </div>
-            <div className="mt-3 sm:hidden">
-                <SearchBar query={query} setQuery={setQuery} />
-            </div>
-              <div className="flex items-center w-full flex-col">
-                <NoData />
-              </div>
-            </>
-          )}
+       
       {!isLoading && files.length > 0 && (
         <>
           <div className="flex space-x-36 md:space-x-8  lg:space-x-28   items-center">
@@ -141,6 +115,33 @@ export default function FilesBrowser({
           </div>
         </>
       )}
+      {query &&  files?.length === 0 && (
+            <>
+             <div className="flex space-x-36 md:space-x-8  lg:space-x-28   items-center">
+            <h1 className="text-lg md:text-2xl lg:text-4xl font-bold">
+              {title}
+            </h1>
+            <div className="hidden sm:block flex-1">
+              <div className="flex-1">
+                <SearchBar query={query} setQuery={setQuery} />
+              </div>
+            </div>
+            <Button
+              onClick={() => {
+                handleUploadClick();
+              }}
+            >
+              Upload File
+            </Button>
+          </div>
+            <div className="mt-3 sm:hidden">
+                <SearchBar query={query} setQuery={setQuery} />
+            </div>
+              <div className="flex items-center w-full flex-col">
+                <NoData />
+              </div>
+            </>
+          )}
       <Modal isVisible={isModalOpen} onClose={() => setIsModalOpen(false)} />
     </main>
   );
