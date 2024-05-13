@@ -53,7 +53,7 @@ cd full_stack_tender_download_system
 npm install
 ```
 
-###4. Set up Convex environment:
+### 4. Set up Convex environment:
  After the dependencies installation is finished, open a second new terminal in vscode and run this command
   ```bash
   npx convex dev
@@ -105,7 +105,9 @@ CLERK_DOMAIN=https://<your issuer key>
 -  After pasting the `Issuer ` key to your `.env.local` file, click on `Webhooks` in the sidebar of `Clerk`. and Click on `Add Endpoint`
      <img width="881" alt="select webhook 12" src="https://github.com/mcakyerima/full_stack_tender_download_system/assets/58314409/bd8db773-dacb-4265-a2cc-d350a5a2af63">
      
-- Next we need to do a little trick here in other to create our apps endpoint that will communicate with the clerk `Webhook`, we need to extract  our `CONVEX_DEPLOYMENT` url and then add `.convex.site/clerk` to it, we can get our `convex endpoint` in the `.env.local` file and create the `webhook` endpoint like this below:
+- Next we need to do a little trick here in other to create our apps endpoint that will communicate with the clerk `Webhook`, we need to extract  our `CONVEX_DEPLOYMENT` url
+ and then add `.convex.site/clerk` to it, we can get our `convex endpoint` in the `.env.local` file and create the `webhook` endpoint like this below:
+  
   <img width="539" alt="convex endpoint url 11" src="https://github.com/mcakyerima/full_stack_tender_download_system/assets/58314409/d1ae7578-da07-4093-aa17-bc75abe6f5e4">
   
 - Next we need to add the `URL` to the Clerk `Endpoint URL` like this:
