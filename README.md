@@ -1,5 +1,5 @@
 # Tender Download System
---------
+
 ![landing-light](https://github.com/mcakyerima/full_stack_tender_download_system/assets/58314409/080cc434-811f-41a6-bd5b-c6c54e662952)
 ![tendar-ipad](https://github.com/mcakyerima/full_stack_tender_download_system/assets/58314409/a1ebd276-8202-41b2-a288-48f7ef594a0a)
 ![tender-main](https://github.com/mcakyerima/full_stack_tender_download_system/assets/58314409/715cf12d-0e5f-4e1e-b16e-76d2a52ca9b4)
@@ -7,8 +7,8 @@
   <img src="https://github.com/mcakyerima/full_stack_tender_download_system/assets/58314409/a313f056-08eb-4090-9410-d57cc76e5de7" alt="Tender Mobile Dark" width="300"/>
   <img src="https://github.com/mcakyerima/full_stack_tender_download_system/assets/58314409/02475c0e-ea19-49b7-acdb-8ba4a90ebd99" alt="Tender Mobile Light" width="300"/>
 </div>
---------
 
+## Description
 📝 Tender Download System is a full-stack React-based web application built with typescript and React designed for browsing, sharing, and downloading tender documents. Users can create organizations, share tenders, view tender details, sort and filter, add to favorites, delete, and more features like Communicating with all documents using Generative Ai coming soon.
 
 ## Features
@@ -34,27 +34,27 @@
 
 Follow these Documentation to set up the project locally:
 
-1. Clone the repository:
+### 1. Clone the repository:
 
 ```bash
 git clone https://github.com/mcakyerima/full_stack_tender_download_system.git
 ```
 
-2. Navigate to the project directory and open in code editor or your choice, prefarably vscode:
+### 2. Navigate to the project directory and open in code editor or your choice, prefarably vscode:
 
 ```bash
 cd full_stack_tender_download_system
 ```
 
-3. Install dependencies:
+### 3. Install dependencies:
    - in the vscode terminal, run this command and install dependencies and libraries
 
 ```bash
 npm install
 ```
 
-4. Set up Convex environment:
-   - After the dependencies installation is finished, open a second new terminal in vscode and run this command
+###4. Set up Convex environment:
+ After the dependencies installation is finished, open a second new terminal in vscode and run this command
   ```bash
   npx convex dev
   ```
@@ -72,7 +72,7 @@ NEXT_PUBLIC_CONVEX_URL=https://clear-swordfish-343.convex.cloud
 ```
 
 
-5. Set up Clerk for authentication and organization creation + OTP or email validation:
+### 5. Set up Clerk for authentication and organization creation + OTP or email validation:
 - Go to [Clerk](https://www.clerk.com) and sign up
 - Create a new project and give it a name of your choice.
 - Choose Login of your choice, prefabaly email and google.
@@ -83,13 +83,14 @@ NEXT_PUBLIC_CONVEX_URL=https://clear-swordfish-343.convex.cloud
   <img width="656" alt="copyenvironment 2" src="https://github.com/mcakyerima/full_stack_tender_download_system/assets/58314409/08406e59-1ebf-4763-92f4-aa3ff0bad026">
   
 - Paste the envirnment variable the to the `.env.local` created by `Convex` in the root of your project. 
+<img width="903" alt="variableas" src="https://github.com/mcakyerima/full_stack_tender_download_system/assets/58314409/7e36d397-2f6a-445e-8b2e-945b58daf727">
 
 - On the sidebar, Click on *JWT templates*.
   <img width="896" alt="jwt templates 3" src="https://github.com/mcakyerima/full_stack_tender_download_system/assets/58314409/e851fee2-ed4d-45e3-b3c0-f2ebd9217826">
   
-- Click on `Issuer Key` and Choose `Convex` in the list of available templates.
-  <img width="437" alt="issuer key 4" src="https://github.com/mcakyerima/full_stack_tender_download_system/assets/58314409/24edfaf6-6170-4b62-945e-719cac9d4fad">
-  
+- Click on `New template` and select `Convex` in the list of available templates.
+ <img width="869" alt="jwt tmplate" src="https://github.com/mcakyerima/full_stack_tender_download_system/assets/58314409/6f2f0026-90ef-4477-945f-3a2a4f401978">
+
 - This will take you to the `isser key` page, Copy the `Issuer key`
   <img width="682" alt="copy issuer key 5" src="https://github.com/mcakyerima/full_stack_tender_download_system/assets/58314409/d186a78d-8cc8-4dd0-8275-d7fc706cfd8b">
   
@@ -98,7 +99,7 @@ NEXT_PUBLIC_CONVEX_URL=https://clear-swordfish-343.convex.cloud
 CLERK_DOMAIN=https://<your issuer key>
 ```
 
-6. Setting up Webhook.
+### 6. Setting up Webhook.
  We need webhook to communicate from clerk to our backend, this is needed so that our backend will know when a new user or organization is created, then it will trigger a mutation event and save our users or organizations to our database automatically. lets configure our `Webhook` with `Clerk`.
 
 -  After pasting the `Issuer ` key to your `.env.local` file, click on `Webhooks` in the sidebar of `Clerk`. and Click on `Add Endpoint`
@@ -123,7 +124,7 @@ CLERK_DOMAIN=https://<your issuer key>
 - After copying the  `Signing Secret` Click on `Organizations` on the sidebar and then `Enable organizations`
   <img width="904" alt="enable organization in clerk 18" src="https://github.com/mcakyerima/full_stack_tender_download_system/assets/58314409/94385634-205b-47f9-ad76-127c73f9a2d8">
 
-7. Setting up our Convex Backend
+### 7. Setting up our Convex Backend
   Before we lunch our app, we need to do some configurations to our backend.
     - Login to convex  [Convex](https://www.convex.dev) with the github account you used to create your project in the `Convex CLI`
       <img width="857" alt="sign in to convex 7" src="https://github.com/mcakyerima/full_stack_tender_download_system/assets/58314409/e9051cac-ec5f-4610-851b-5a345ee4d2b2">
@@ -143,15 +144,15 @@ If everything is set according to this documentation you should see This in the 
 <img width="898" alt="tables" src="https://github.com/mcakyerima/full_stack_tender_download_system/assets/58314409/39452936-5bd6-4ace-990d-58df4027daa5">
 
 
-7. Start the project on local host:
+### 8. Start the project on local host:
 - Go to your code editor and run this command.
 ```bash
 npm run dev dev
 ```
 
-7. Access the application in your web browser at `http://localhost:3000`.
+### 9. Access the application in your web browser at `http://localhost:3000`.
 
-## Additional Notes
+### Additional Notes
 
 - Should you need any clarification while setting up this project, please reachout to me at anytime and i am ever ready to be there sir's.
 
