@@ -44,31 +44,34 @@ export const SearchBar = ({
                 <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="flex items-center justify-between">
                     <div className='relative w-full'>
-                        <div className="flex items-center rounded-full h-[42px] shadow-sm border ">
+                        <div className="h-[42px]">
                             <FormField
                                 control={form.control}
                                 name="query"
                                 render={({ field }: any) => (
                                     <FormControl>
-                                    <Input
-                                        placeholder='Search files'
-                                        className="w-full h-full border-none px-4 focus:outline-none focus:border-transparent"
-                                        {...field}
-                                    />
+                                        <div className="relative h-full">
+                                            <Input
+                                                placeholder='Search files'
+                                                className="w-full h-full  px-4 focus:outline-none focus:border-transparent flex items-center rounded-full  shadow-sm border"
+                                                {...field}
+                                            />
+                                            <Button
+                                                type="submit"
+                                                disabled={form.formState.isSubmitting}
+                                                className="top-[2px] right-0 absolute rounded-full w-[39px] h-[38px] mr-1 p-0 focus:outline-none"
+                                            >
+                                                {form.formState.isSubmitting ? (
+                                                    <Loader2 className="animate-spin" />
+                                                ) : (
+                                                    <SearchIcon size={20} />
+                                                )}
+                                            </Button>
+                                        </div>
                                 </FormControl>
                                 )}
                             />
-                            <Button
-                                type="submit"
-                                disabled={form.formState.isSubmitting}
-                                className="rounded-full w-[40px] h-[36px] mr-1 p-0 focus:outline-none"
-                            >
-                                {form.formState.isSubmitting ? (
-                                    <Loader2 className="animate-spin" />
-                                ) : (
-                                    <SearchIcon size={20} />
-                                )}
-                            </Button>
+                            
                         </div>
                     </div>
                 </form>

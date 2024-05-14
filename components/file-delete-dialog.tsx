@@ -13,6 +13,7 @@ import { api } from "@/convex/_generated/api";
 import { Doc } from "@/convex/_generated/dataModel";
 import { useMutation } from "convex/react";
 import { useToast } from '@/components/ui/use-toast';
+import { ConvexError } from 'convex/values';
 
 interface FileDeleteDialogProps {
     file: Doc<"files">;
@@ -34,12 +35,21 @@ const FileDeleteDialog: React.FC<FileDeleteDialogProps> = ({ file, isOpen, setIs
                 description: "Your file is now in the recycle bin",
             });
         } catch (error) {
-            toast({
-                variant: "destructive",
-                title: "Failed to delete file",
-                description: "An error occurred while deleting the file. Please try again later."
-            });
+            if (error instanceof ConvexError){
+                toast({
+                    variant: "destructive",
+                    title: "Failed to delete file",
+                    description: error.data,
+                });
+            } else {
+                toast({
+                    variant: "destructive",
+                    title: "Failed to delete file",
+                    description: "An error occurred while deleting the file.",
+                });
+            }
         }
+        
     }
     // use the convex deleteFile mutation to delete the file
     const deleteFile = useMutation(api.files.deleteFile);

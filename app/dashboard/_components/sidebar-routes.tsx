@@ -1,6 +1,6 @@
 "use client";
 
-import { FileIcon, StarIcon, TrashIcon } from "lucide-react";
+import { FileIcon, Files, StarIcon, TrashIcon } from "lucide-react";
 import { RiRobot3Line } from "react-icons/ri";
 import { FaGithub } from "react-icons/fa";
 import { SidebarItem } from "./sidebar-item";
@@ -8,8 +8,13 @@ import { SidebarItem } from "./sidebar-item";
 
 const routes = [
     {
+        icon: Files,
+        label: "Pulic Files",
+        href: "/dashboard/public"
+    },
+    {
         icon: FileIcon,
-        label: "All Files",
+        label: "My Files",
         href: "/dashboard/file",
     },
     {

@@ -8,11 +8,11 @@ import dynamic from "next/dynamic";
 const FileCard = dynamic(
   () => import("@/app/dashboard/_components/file-card"),
   {
-    ssr: false
+    ssr: false,
   }
 );
 import { EmptyFileVector } from "@/components/empty_file";
-import { Loader2 } from "lucide-react";
+import { Loader2, Upload } from "lucide-react";
 import { SearchBar } from "@/components/search-bar";
 import { Modal } from "@/components/upload-modal";
 import { Button } from "@/components/ui/button";
@@ -21,9 +21,11 @@ import { NoData } from "@/components/no-data";
 export default function FilesBrowser({
   title,
   favorites,
+  isPublic,
 }: {
   title: string;
   favorites?: boolean;
+  isPublic?:boolean;
 }) {
   // create a state for modal
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -50,7 +52,7 @@ export default function FilesBrowser({
   // retrieving data from convex
   const files = useQuery(
     api.files.getFiles,
-    orgId ? { orgId, query, favorites } : "skip"
+    orgId ? { orgId, query, favorites,isPublic } : "skip"
   );
 
   // get all favorites
@@ -73,15 +75,45 @@ export default function FilesBrowser({
         <div className="flex flex-col items-center space-y-6">
           <EmptyFileVector />
           <Button
+            className="flex items-center gap-2"
             onClick={() => {
               handleUploadClick();
             }}
           >
+            <Upload height={18} width={18} className="mb-[1px]"/>
             Upload File
           </Button>
         </div>
       )}
-       
+       {query &&  files?.length === 0 && (
+            <>
+             <div className="flex space-x-36 md:space-x-8  lg:space-x-28   items-center">
+            <h1 className="text-lg md:text-2xl lg:text-4xl font-bold">
+              {title}
+            </h1>
+            <div className="hidden sm:block flex-1">
+              <div className="flex-1">
+                <SearchBar query={query} setQuery={setQuery} />
+              </div>
+            </div>
+            <Button
+              className="flex items-center gap-2"
+              onClick={() => {
+                handleUploadClick();
+              }}
+            >
+              <Upload height={18} width={18} className="mb-[1px]"/>
+              Upload File
+            </Button>
+          </div>
+            <div className="mt-3 sm:hidden">
+                <SearchBar query={query} setQuery={setQuery} />
+            </div>
+              <div className="flex items-center w-full flex-col">
+                <NoData />
+              </div>
+            </>
+          )}
       {!isLoading && files.length > 0 && (
         <>
           <div className="flex space-x-36 md:space-x-8  lg:space-x-28   items-center">
@@ -94,11 +126,13 @@ export default function FilesBrowser({
               </div>
             </div>
             <Button
-              onClick={() => {
-                handleUploadClick();
-              }}
-            >
-              Upload File
+                className="flex items-center gap-2"
+                onClick={() => {
+                  handleUploadClick();
+                }}
+              >
+                <Upload height={18} width={18} className="mb-[1px]"/>
+                Upload File
             </Button>
           </div>
           <div className="mt-3 sm:hidden">
@@ -115,33 +149,6 @@ export default function FilesBrowser({
           </div>
         </>
       )}
-      {query &&  files?.length === 0 && (
-            <>
-             <div className="flex space-x-36 md:space-x-8  lg:space-x-28   items-center">
-            <h1 className="text-lg md:text-2xl lg:text-4xl font-bold">
-              {title}
-            </h1>
-            <div className="hidden sm:block flex-1">
-              <div className="flex-1">
-                <SearchBar query={query} setQuery={setQuery} />
-              </div>
-            </div>
-            <Button
-              onClick={() => {
-                handleUploadClick();
-              }}
-            >
-              Upload File
-            </Button>
-          </div>
-            <div className="mt-3 sm:hidden">
-                <SearchBar query={query} setQuery={setQuery} />
-            </div>
-              <div className="flex items-center w-full flex-col">
-                <NoData />
-              </div>
-            </>
-          )}
       <Modal isVisible={isModalOpen} onClose={() => setIsModalOpen(false)} />
     </main>
   );

@@ -33,6 +33,7 @@ http.route({
                     await ctx.runMutation(internal.users.addOrgIdToUser, {
                         tokenIdentifier: `${clerkDomain}|${result.data.public_user_data.user_id}`,
                         orgId: result.data.organization.id,
+                        role: result.data.role === 'admin' ? "admin" : "member",
                     });
                     break;
                 default:

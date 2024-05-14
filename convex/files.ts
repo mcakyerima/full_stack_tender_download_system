@@ -23,11 +23,15 @@ async function hasAccessToOrg (
     orgId: string
 ) {
     const user = await getUser(ctx, tokenIdentifier);
-    const hasAccess = 
-            user.orgIds.includes(orgId) ||
-            user.tokenIdentifier.includes(orgId);
+    if (!user) return null;
 
-    return hasAccess
+    const hasAccess = 
+            user.orgIds.some(item => item.orgId === orgId) ||
+            user.tokenIdentifier.includes(orgId);
+ 
+    if (!hasAccess) return null;
+
+    return { user }
 }
 
 // createFile is used to create a file in the database
@@ -39,6 +43,7 @@ export const createFile = mutation({
         deadline: v.string(),
         orgId: v.string(),
         fileId: v.id("_storage"),
+        isPublic: v.optional(v.boolean())
     },
 
     async handler(ctx, args) {
@@ -61,17 +66,18 @@ export const createFile = mutation({
             description: args.description,
             deadline: args.deadline,
             orgId: args.orgId,
-            fileId: args.fileId
+            fileId: args.fileId,
+            isPublic: args.isPublic
         });
     }
 })
-
 // getFiles query is used to fetch data from database
 export const getFiles = query({
     args:{
         orgId: v.string(),
         query: v.optional(v.string()),
         favorites: v.optional(v.boolean()),
+        isPublic: v.optional(v.boolean()),
     },
     async handler(ctx, args) {
         // stop unauthorized access
@@ -87,7 +93,7 @@ export const getFiles = query({
         if (!hasAccess) return [];
 
         // return ctx.db.)query('files').collect();
-        let files = await ctx.db.query("files").withIndex("by_orgId",
+        let files = await ctx.db.query("files").withIndex("by_orgId_isPublic",
          q => q.eq("orgId", args.orgId)
         ).collect();
 
@@ -114,6 +120,9 @@ export const getFiles = query({
             files = files.filter( file => favorites.some(favorite => favorite.fileId === file._id))
         }
 
+        if (args.isPublic) {
+            files = await ctx.db.query("files").collect()
+        }
 
         return files
 
@@ -138,17 +147,19 @@ export const deleteFile = mutation({
         if (!file) throw new ConvexError("file does not exist");
 
         // check if user has access to the org
-        const hasAccess = await hasAccessToOrg(
+        const access = await hasAccessToOrg(
             ctx,
             identity.tokenIdentifier,
             file.orgId
         );
 
         // stop unauthorized access
-        if (!hasAccess) throw new ConvexError("you do not have access to this org");
+        if (!access) throw new ConvexError("you do not have access to this organization");
 
-        // if user has no access to the org, throw a convex error
-        if (!hasAccess) throw new ConvexError("you do not have access to delete this file");
+        //check if role is admin
+        if (access.user.orgIds.some(item => item.orgId === file.orgId && item.role === "admin")) {
+            throw new ConvexError("you must be an admin to delete a file");
+        }
 
         // delete file from database
         await ctx.db.delete(args.fileId);

@@ -26,7 +26,6 @@ export const FileCardActions = ({
   const setFavorite = useMutation(api.files.setFavorite);
 
   const handleFavorite = async (file_id: Id<"files">) => {
-    console.log({ file_id });
     try {
       await setFavorite({
         fileId: file_id,

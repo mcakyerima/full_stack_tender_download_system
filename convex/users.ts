@@ -1,6 +1,7 @@
 import { CaretSortIcon } from "@radix-ui/react-icons";
 import { MutationCtx, QueryCtx, internalMutation } from "./_generated/server";
 import { ConvexError, v } from "convex/values";
+import { roles } from "./schema";
 
 // getUser helper function
 export const getUser = async (ctx: QueryCtx | MutationCtx, tokenIdentifier: string) => {
@@ -30,7 +31,8 @@ export const createUser = internalMutation({
 export const addOrgIdToUser = internalMutation({
     args: {
         tokenIdentifier: v.string(),
-        orgId: v.string()
+        orgId: v.string(),
+        role: roles
     },
     async handler(ctx, args) {
         // get the user using tokenIdentifier
@@ -38,7 +40,7 @@ export const addOrgIdToUser = internalMutation({
 
         // patch the user and add orgId to their record
         await ctx.db.patch(user._id, {
-            orgIds: [...user.orgIds, args.orgId]
+            orgIds: [...user.orgIds, { orgId: args.orgId, role: args.role}]
         })
     }
 })

@@ -32,7 +32,7 @@ export default function LandingPage() {
           </div>
           <div className="text-center">
             <h1 className="text-4xl font-bold tracking-tight  sm:text-6xl">
-              Full Stack Tender Donload Sytem
+              Full Stack Tender download system.
             </h1>
             <p className="mt-6 text-lg leading-8 ">
               The easient way to share and download tender documents with your team.
