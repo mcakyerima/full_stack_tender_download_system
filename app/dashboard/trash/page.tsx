@@ -1,10 +1,10 @@
-"use client"
-import { UnderDesign } from "@/components/awating-page"
+"use client";
+import FilesBrowser from "../_components/file-browser";
 
-export default function TrashPage(){
-    return (
-        <div>
-            <UnderDesign/>
-        </div>
-    )
+export default function Trash() {
+  return (
+    <div>
+      <FilesBrowser title="Your Trash" deleteOnly={true} />
+    </div>
+  );
 }

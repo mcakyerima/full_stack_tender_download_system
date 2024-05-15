@@ -16,12 +16,11 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-
-import { FcImageFile } from "react-icons/fc";
-import { FaFilePdf } from "react-icons/fa";
+import { BsFilePdf } from "react-icons/bs";
 import { FaFileCsv } from "react-icons/fa6";
 import { PiMicrosoftExcelLogo } from "react-icons/pi";
 import { PiMicrosoftWordLogoFill } from "react-icons/pi";
+import { Image } from "lucide-react";
 
 export default function FileCard({
   file,
@@ -35,16 +34,17 @@ export default function FileCard({
   const [remainingDays, setRemainingDays] = useState<number | null>(null);
 
   const headerIconTypes = {
-    image: <FcImageFile size={25} />,
-    pdf: <FaFilePdf size={25} color="rose" />,
+    image: <Image size={25} />,
+    pdf: <BsFilePdf size={25} color="rose" />,
     csv: <FaFileCsv size={25} />,
     xls: <PiMicrosoftExcelLogo size={25} />,
     doc: <PiMicrosoftWordLogoFill size={25} />,
   } as Record<Doc<"files">["type"], ReactNode>;
 
+  
   const iconTypes = {
-    image: <FcImageFile size={50} />,
-    pdf: <FaFilePdf size={50} color="rose" />,
+    image: <Image size={50} />,
+    pdf: <BsFilePdf size={50} color="rose" />,
     csv: <FaFileCsv size={50} />,
     xls: <PiMicrosoftExcelLogo size={50} />,
     doc: <PiMicrosoftWordLogoFill size={50} />,

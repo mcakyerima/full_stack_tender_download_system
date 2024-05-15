@@ -31,8 +31,8 @@ const FileDeleteDialog: React.FC<FileDeleteDialogProps> = ({ file, isOpen, setIs
             });
             toast({
                 variant: "success",
-                title: "File deleted successfully",
-                description: "Your file is now in the recycle bin",
+                title: "File marked for deletion",
+                description: "Your file is now in the recycle bin and will be deleted soon!",
             });
         } catch (error) {
             if (error instanceof ConvexError){
@@ -59,7 +59,7 @@ const FileDeleteDialog: React.FC<FileDeleteDialogProps> = ({ file, isOpen, setIs
                 <AlertDialogHeader>
                     <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
                     <AlertDialogDescription>
-                        This action will delete your data and add it to the recycle bin.
+                        This action will mark your file for deletion, files are deleted periodically.
                     </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>

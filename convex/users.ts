@@ -17,7 +17,7 @@ export const getUser = async (ctx: QueryCtx | MutationCtx, tokenIdentifier: stri
     return user;
 
 }
-
+// method to create user recieved from webhook
 export const createUser = internalMutation({
     args: {tokenIdentifier: v.string()},
     async handler(ctx, args) {
@@ -28,6 +28,7 @@ export const createUser = internalMutation({
     }
 })
 
+// method to add user recieved from webhook to an organization
 export const addOrgIdToUser = internalMutation({
     args: {
         tokenIdentifier: v.string(),
@@ -41,6 +42,33 @@ export const addOrgIdToUser = internalMutation({
         // patch the user and add orgId to their record
         await ctx.db.patch(user._id, {
             orgIds: [...user.orgIds, { orgId: args.orgId, role: args.role}]
+        })
+    }
+});
+
+// method to update user role in organization
+export const updateRoleInOrgForUser = internalMutation({
+    args: {
+        tokenIdentifier: v.string(),
+        orgId: v.string(),
+        role: roles
+    },
+    async handler(ctx, args) {
+        console.log(args.role);
+        // get the user using tokenIdentifier
+        const user = await getUser(ctx, args.tokenIdentifier);
+
+        // get the users org
+        const org = user.orgIds.find(item => item.orgId === args.orgId);
+
+        if (!org) throw new ConvexError("Expecting an org on the user, but found none when updating.");
+
+        //update org role
+        org.role = args.role
+
+        // patch the user and add orgId to their record
+        await ctx.db.patch(user._id, {
+            orgIds: [org]
         })
     }
 })

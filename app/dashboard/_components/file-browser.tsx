@@ -22,10 +22,12 @@ export default function FilesBrowser({
   title,
   favorites,
   isPublic,
+  deleteOnly,
 }: {
   title: string;
   favorites?: boolean;
   isPublic?:boolean;
+  deleteOnly?:boolean
 }) {
   // create a state for modal
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -52,7 +54,7 @@ export default function FilesBrowser({
   // retrieving data from convex
   const files = useQuery(
     api.files.getFiles,
-    orgId ? { orgId, query, favorites,isPublic } : "skip"
+    orgId ? { orgId, query, favorites, isPublic, deleteOnly } : "skip"
   );
 
   // get all favorites

@@ -21,6 +21,7 @@ http.route({
                     'svix-signature': headerPayload.get('svix-signature')!,
                 },
             });
+            console.log(result.type);
 
             switch (result.type) {
                 case 'user.created':
@@ -34,6 +35,14 @@ http.route({
                         tokenIdentifier: `${clerkDomain}|${result.data.public_user_data.user_id}`,
                         orgId: result.data.organization.id,
                         role: result.data.role === 'admin' ? "admin" : "member",
+                    });
+                    break;
+                case "organizationMembership.updated":
+                    console.log(result.data.role);
+                    await ctx.runMutation(internal.users.updateRoleInOrgForUser, {
+                        tokenIdentifier: `${clerkDomain}|${result.data.public_user_data.user_id}`,
+                        orgId: result.data.organization.id,
+                        role: result.data.role.split(":")[1] === 'admin' ? "admin" : "member",
                     });
                     break;
                 default:
@@ -53,3 +62,5 @@ http.route({
 });
 
 export default http;
+
+

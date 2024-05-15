@@ -10,7 +10,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Trash2Icon, MoreVertical, StarIcon } from "lucide-react";
+import { Trash2Icon, MoreVertical, StarIcon, RotateCw } from "lucide-react";
 import FileDeleteDialog from "@/components/file-delete-dialog";
 
 interface FileCardActionsProps {
@@ -24,6 +24,7 @@ export const FileCardActions = ({
 }: FileCardActionsProps) => {
   const [isConfirmedOpen, setIsConfirmedOpen] = useState(false);
   const setFavorite = useMutation(api.files.setFavorite);
+  const restoreFile = useMutation(api.files.restoreFile);
 
   const handleFavorite = async (file_id: Id<"files">) => {
     try {
@@ -63,10 +64,27 @@ export const FileCardActions = ({
           <Protect role="org:admin" fallback={<></>}>
             <DropdownMenuSeparator />
             <DropdownMenuItem
-              onClick={() => setIsConfirmedOpen(true)}
-              className="flex gap-1 items-center cursor-pointer text-red-500"
+              onClick={() =>{
+                if (file.shouldDelete) {
+                  restoreFile({
+                    fileId: file._id
+                  })
+                } else {
+                   setIsConfirmedOpen(true)}
+                }
+              }
+              className="flex gap-1 items-center cursor-pointer"
             >
-              <Trash2Icon size={20} /> Delete
+              { file.shouldDelete ?  
+                <div className="flex gap-2 text-green-500">
+                  <RotateCw size={20} />
+                  <span>Restore</span> 
+                </div> : 
+                <div className="flex gap-2 text-red-500">
+                  <Trash2Icon size={20} />
+                  <span>Delete</span>
+                </div>
+              }
             </DropdownMenuItem>
           </Protect>
         </DropdownMenuContent>

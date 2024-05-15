@@ -2,7 +2,7 @@
 // in realtime, it also has schema validation and uses websockets
 
 import { ConvexError, v } from "convex/values";
-import { MutationCtx, QueryCtx, mutation, query } from "./_generated/server"
+import { MutationCtx, QueryCtx, internalMutation, mutation, query } from "./_generated/server"
 import { getUser } from "./users";
 import { fileTypes } from "./schema";
 
@@ -71,6 +71,8 @@ export const createFile = mutation({
         });
     }
 })
+
+
 // getFiles query is used to fetch data from database
 export const getFiles = query({
     args:{
@@ -78,6 +80,7 @@ export const getFiles = query({
         query: v.optional(v.string()),
         favorites: v.optional(v.boolean()),
         isPublic: v.optional(v.boolean()),
+        deleteOnly: v.optional(v.boolean())
     },
     async handler(ctx, args) {
         // stop unauthorized access
@@ -97,13 +100,8 @@ export const getFiles = query({
          q => q.eq("orgId", args.orgId)
         ).collect();
 
-        // if no query return files else do a javascript filter with query and reuturn
-        const query = args.query
-
-        if (query) {
-            files = files.filter(file => file.name.toLowerCase().includes(query.toLowerCase()));
-        } 
-
+       
+        // Getting favorite files
         if (args.favorites) {
             // get the user
             const user = await ctx.db.query("users").withIndex("by_tokenIdentifier",
@@ -123,7 +121,20 @@ export const getFiles = query({
         if (args.isPublic) {
             files = await ctx.db.query("files").collect()
         }
+        if (args.deleteOnly) {
+            // filter files that are favorites
+            files = files.filter( file => file.shouldDelete)
+        } else {
+            files = files.filter( file => !file.shouldDelete)
+        }
 
+         // if no query return files else do a javascript filter with query and reuturn
+         const query = args.query
+
+         if (query) {
+             files = files.filter(file => file.name.toLowerCase().includes(query.toLowerCase()));
+         } 
+ 
         return files
 
     }
@@ -158,13 +169,74 @@ export const deleteFile = mutation({
 
         //check if role is admin
         if (access.user.orgIds.some(item => item.orgId === file.orgId && item.role === "admin")) {
+            // delete file from database
+            await ctx.db.patch(args.fileId, {
+                shouldDelete: true,
+            });
+        } else {
             throw new ConvexError("you must be an admin to delete a file");
         }
 
-        // delete file from database
-        await ctx.db.delete(args.fileId);
     }
 })
+
+// Restore Files
+export const restoreFile = mutation({
+    args: {
+        fileId: v.id("files")
+    },
+    async handler(ctx, args) {
+        // stop unauthorized access
+        const identity = await ctx.auth.getUserIdentity();
+
+        if (!identity) throw new ConvexError("you must be logged in to restore a file");
+
+        // get file from database
+        const file = await ctx.db.get(args.fileId);
+
+        // if file does not exist throw a convex error
+        if (!file) throw new ConvexError("file does not exist");
+
+        // check if user has access to the org
+        const access = await hasAccessToOrg(
+            ctx,
+            identity.tokenIdentifier,
+            file.orgId
+        );
+
+        // stop unauthorized access
+        if (!access) throw new ConvexError("you do not have access to this organization");
+
+        //check if role is admin
+        if (access.user.orgIds.some(item => item.orgId === file.orgId && item.role === "admin")) {
+            // delete file from database
+            await ctx.db.patch(args.fileId, {
+                shouldDelete: false,
+            });
+        } else {
+            throw new ConvexError("you must be an admin to restore a file");
+        }
+
+    }
+});
+
+// cron job internal mutation to delete all files
+export const deleteAllFiles = internalMutation({
+    args: {},
+    async handler(ctx, args) {
+        // fetch all fles with shouldDelete set to true
+        const files = await ctx.db
+                    .query("files")
+                    .withIndex("by_shouldDelete", (q) => q.eq("shouldDelete", true))
+                    .collect();
+        // loop through files and delete them using promise.all
+        await Promise.all(files.map(async (file) => {
+            await ctx.storage.delete(file.fileId);
+            return await ctx.db.delete(file._id);
+        }
+        ));
+    }
+});
 
 // generate an image url based on storage id
 export const imageUrl = query({
@@ -181,6 +253,7 @@ export const imageUrl = query({
         return url;
     }
 });
+
 
 // when favorite is selected, set favorite column to true for user
 export const setFavorite = mutation({

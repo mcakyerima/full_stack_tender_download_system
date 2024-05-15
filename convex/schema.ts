@@ -24,7 +24,9 @@ export default defineSchema({
     orgId: v.string(),
     fileId: v.id("_storage"),
     isPublic: v.optional(v.boolean()),
-  }).index("by_orgId_isPublic", ["orgId","isPublic"]),
+    shouldDelete: v.optional(v.boolean())
+  }).index("by_orgId_isPublic", ["orgId","isPublic"])
+  .index("by_shouldDelete", ["shouldDelete"]),
   favorites: defineTable({
     fileId: v.id("files"),
     orgId: v.string(),
