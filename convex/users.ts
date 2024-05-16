@@ -1,5 +1,5 @@
 import { CaretSortIcon } from "@radix-ui/react-icons";
-import { MutationCtx, QueryCtx, internalMutation } from "./_generated/server";
+import { MutationCtx, QueryCtx, internalMutation, query } from "./_generated/server";
 import { ConvexError, v } from "convex/values";
 import { roles } from "./schema";
 
@@ -17,16 +17,47 @@ export const getUser = async (ctx: QueryCtx | MutationCtx, tokenIdentifier: stri
     return user;
 
 }
+
 // method to create user recieved from webhook
 export const createUser = internalMutation({
-    args: {tokenIdentifier: v.string()},
+    args: {
+        tokenIdentifier: v.string(),
+        name: v.string(),
+        image: v.optional(v.string())
+    },
     async handler(ctx, args) {
         await ctx.db.insert("users", {
             tokenIdentifier: args.tokenIdentifier,
-            orgIds: []
+            orgIds: [],
+            name: args.name,
+            image: args.image
         })
     }
-})
+}) 
+
+// update user
+export const updateUser = internalMutation({
+    args: {
+        tokenIdentifier: v.string(),
+        name: v.string(),
+        image: v.optional(v.string())
+    },
+    async handler(ctx, args) {
+        // get the user for updating
+        const user = await ctx.db.query("users")
+        .withIndex(
+            "by_tokenIdentifier",
+            q => q.eq("tokenIdentifier", args.tokenIdentifier)
+        ).first();
+        // throw convex error if no user
+        if (!user) throw new ConvexError("No user with the given tokenIdentifier found.");
+
+        await ctx.db.patch(user._id, {
+            name: args.name,
+            image: args.image
+        })
+    }
+}) 
 
 // method to add user recieved from webhook to an organization
 export const addOrgIdToUser = internalMutation({
@@ -71,4 +102,16 @@ export const updateRoleInOrgForUser = internalMutation({
             orgIds: [org]
         })
     }
+});
+
+export const getUserProfile = query({
+    args: {userId: v.id("users")},
+    async handler(ctx, args) {
+        const user = await ctx.db.get(args.userId);
+
+        return {
+            name: user?.name,
+            image: user?.image
+        }
+    },
 })

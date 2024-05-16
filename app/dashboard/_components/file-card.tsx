@@ -22,6 +22,12 @@ import { PiMicrosoftExcelLogo } from "react-icons/pi";
 import { PiMicrosoftWordLogoFill } from "react-icons/pi";
 import { Image } from "lucide-react";
 
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+} from "@/components/ui/avatar"
+
 export default function FileCard({
   file,
   favorites,
@@ -30,7 +36,9 @@ export default function FileCard({
   favorites: Doc<"favorites">[];
 }) {
   const fileUrl: any = useQuery(api.files.imageUrl, { fileId: file.fileId });
-
+  const userProfile = useQuery(api.users.getUserProfile, {
+    userId:file.userId
+  });
   const [remainingDays, setRemainingDays] = useState<number | null>(null);
 
   const headerIconTypes = {
@@ -93,13 +101,19 @@ export default function FileCard({
         </div>
       </CardContent>
       <CardFooter className="flex justify-between items-center">
+        <div className="flex items-center gap-1">
+          <Avatar className="h-7 w-7">
+            <AvatarImage  src="https://github.com/shadcn.png" alt="@shadcn" />
+            <AvatarFallback>CN</AvatarFallback>
+          </Avatar>
+          <p className="text-sm">{userProfile?.name}</p>
+        </div>
         <p className="text-sm text-gray-500">
           Deadline:{" "}
           {remainingDays !== null
             ? `in ${remainingDays} ${remainingDays > 1 ? "days" : "day"}`
             : "Unknown"}
         </p>
-        <Button onClick={handleDownload}>Download</Button>
       </CardFooter>
     </Card>
   );

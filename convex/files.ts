@@ -67,7 +67,8 @@ export const createFile = mutation({
             deadline: args.deadline,
             orgId: args.orgId,
             fileId: args.fileId,
-            isPublic: args.isPublic
+            isPublic: args.isPublic,
+            userId: hasAccess.user._id
         });
     }
 })
