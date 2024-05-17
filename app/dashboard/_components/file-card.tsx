@@ -27,6 +27,7 @@ import {
   AvatarFallback,
   AvatarImage,
 } from "@/components/ui/avatar"
+import Truncate from "@/lib/text-truncate";
 
 export default function FileCard({
   file,
@@ -43,7 +44,7 @@ export default function FileCard({
 
   const headerIconTypes = {
     image: <Image size={25} />,
-    pdf: <BsFilePdf size={25} color="rose" />,
+    pdf: <BsFilePdf size={22} color="rose" />,
     csv: <FaFileCsv size={25} />,
     xls: <PiMicrosoftExcelLogo size={25} />,
     doc: <PiMicrosoftWordLogoFill size={25} />,
@@ -69,23 +70,22 @@ export default function FileCard({
     setRemainingDays(days);
   }, [file.deadline]);
 
-  const handleDownload = () => {
-    window.open(fileUrl, "_blank");
-  };
 
   return (
     <Card className="border rounded-md shadow-md relative">
       <CardHeader>
-        <CardTitle className="flex items-center justify-between">
+        <CardTitle className="flex items-center justify-between text-base">
           <div className="flex items-center gap-2">
             {headerIconTypes[file.type]}
-            {file.name}
+            <Truncate text={file.name} maxLength={50}/>
           </div>
           <div className="absolute right-2 top-5">
-            <FileCardActions isFavorited={isFavorited} file={file} />
+            <FileCardActions isFavorited={isFavorited} file={file} url={fileUrl}/>
           </div>
         </CardTitle>
-        <CardDescription>{file.description}</CardDescription>
+        <CardDescription className="text-wrap overflow-hidden">
+          <Truncate text={file.description} maxLength={200}/>
+        </CardDescription>
       </CardHeader>
       <CardContent>
         <div
@@ -101,14 +101,14 @@ export default function FileCard({
         </div>
       </CardContent>
       <CardFooter className="flex justify-between items-center">
-        <div className="flex items-center gap-1">
-          <Avatar className="h-7 w-7">
-            <AvatarImage  src="https://github.com/shadcn.png" alt="@shadcn" />
+        <div className="flex items-center gap-2">
+          <Avatar className="h-8 w-8 border">
+            <AvatarImage  src={userProfile?.image} alt="@shadcn" />
             <AvatarFallback>CN</AvatarFallback>
           </Avatar>
-          <p className="text-sm">{userProfile?.name}</p>
+          <p className="text-xs">{userProfile?.name}</p>
         </div>
-        <p className="text-sm text-gray-500">
+        <p className="text-xs text-gray-500">
           Deadline:{" "}
           {remainingDays !== null
             ? `in ${remainingDays} ${remainingDays > 1 ? "days" : "day"}`
