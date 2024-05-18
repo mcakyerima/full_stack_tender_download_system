@@ -24,11 +24,11 @@ export default function DashboardLayout({
         </head>
         <body className={inter.className}>
             <Toaster />
-            {isDashboard && <Header dashboard={true} />} {/* Render Header only if in dashboard route */}
-            <div className="flex"> {/* Wrap SideNav and children in a flex container */}
-            <div className="hidden md:flex h-full w-52 flex-col fixed inset-y-0 z-40">
-                <Sidebar/>
-            </div>
+            {isDashboard && <Header dashboard={true} />}
+            <div className="flex">
+              <div className="hidden md:flex h-full w-52 flex-col fixed inset-y-0 z-40">
+                  <Sidebar/>
+              </div>
               <div className={isDashboard ? "flex-grow sm:ml-[200px]" : "flex-grow"}> {/* Apply conditional class based on whether in dashboard route */}
                 {children}
               </div>

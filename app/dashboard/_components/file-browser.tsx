@@ -11,12 +11,22 @@ const FileCard = dynamic(
     ssr: false,
   }
 );
+// TABS
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "@/components/ui/tabs"
+
 import { EmptyFileVector } from "@/components/empty_file";
-import { Loader2, Upload } from "lucide-react";
+import { LayoutGrid, List, Loader2, Upload } from "lucide-react";
 import { SearchBar } from "@/components/search-bar";
 import { Modal } from "@/components/upload-modal";
 import { Button } from "@/components/ui/button";
 import { NoData } from "@/components/no-data";
+import { DataTable } from "./file-table";
+import { columns } from "./columns";
 
 export default function FilesBrowser({
   title,
@@ -63,6 +73,12 @@ export default function FilesBrowser({
     orgId ? { orgId } : "skip"
   );
 
+  // refactor i want isFavorited to return boolean for every file
+  const modifiedFile = files?.map((file) => {
+    const isFavorited = allFavorites?.some((favorite) => favorite.fileId === file._id);
+    return { ...file, isFavorited };
+  });
+
   const isLoading = files === undefined;
 
   return (
@@ -89,28 +105,28 @@ export default function FilesBrowser({
       )}
        {query &&  files?.length === 0 && (
             <>
-             <div className="flex space-x-36 md:space-x-8  lg:space-x-28   items-center">
-            <h1 className="text-lg md:text-2xl lg:text-4xl font-bold">
-              {title}
-            </h1>
-            <div className="hidden sm:block flex-1">
-              <div className="flex-1">
-                <SearchBar query={query} setQuery={setQuery} />
+              <div className="flex space-x-36 md:space-x-8  lg:space-x-28   items-center">
+                <h1 className="text-lg md:text-2xl lg:text-4xl font-bold">
+                  {title}
+                </h1>
+                <div className="hidden sm:block flex-1">
+                  <div className="flex-1">
+                    <SearchBar query={query} setQuery={setQuery} />
+                  </div>
+                </div>
+                <Button
+                  className="flex items-center gap-2"
+                  onClick={() => {
+                    handleUploadClick();
+                  }}
+                >
+                  <Upload height={18} width={18} className="mb-[1px]"/>
+                  Upload File
+                </Button>
               </div>
-            </div>
-            <Button
-              className="flex items-center gap-2"
-              onClick={() => {
-                handleUploadClick();
-              }}
-            >
-              <Upload height={18} width={18} className="mb-[1px]"/>
-              Upload File
-            </Button>
-          </div>
-            <div className="mt-3 sm:hidden">
-                <SearchBar query={query} setQuery={setQuery} />
-            </div>
+              <div className="mt-3 sm:hidden">
+                  <SearchBar query={query} setQuery={setQuery} />
+              </div>
               <div className="flex items-center w-full flex-col">
                 <NoData />
               </div>
@@ -140,15 +156,36 @@ export default function FilesBrowser({
           <div className="mt-3 sm:hidden">
                 <SearchBar query={query} setQuery={setQuery} />
           </div>
-          <div className="grid lg:grid-cols-3 gap-4 md:grid-cols-2 sm:grid-cols-1 my-5">
-            {files?.map((file) => (
-              <FileCard
-                favorites={allFavorites ?? []}
-                key={file._id}
-                file={file}
-              />
-            ))}
-          </div>
+
+          {/* Table toggler */}
+          <Tabs defaultValue="grid" className="mt-4  w-[380px] sm:w-full overflow-x-scroll">
+            <TabsList>
+              <TabsTrigger value="grid" className="flex gap-1 items-cente">
+                <LayoutGrid size={22}/> Grid
+              </TabsTrigger>
+              <TabsTrigger value="table" className="flex gap-1 items-cent">
+                <List size={22}/> Table
+              </TabsTrigger>
+            </TabsList>
+            <TabsContent value="grid">
+              <div className="grid lg:grid-cols-3 gap-4 md:grid-cols-2 sm:grid-cols-1 my-5">
+                  {modifiedFile?.map((file) => (
+                    <FileCard
+                      key={file._id}
+                      file={file}
+                    />
+                  ))}
+                </div>
+            </TabsContent>
+            <TabsContent value="table">
+              <div className="mt-3 w-[400px] sm:w-full overflow-x-scroll">
+                <DataTable columns={columns} data={modifiedFile ?? []}/>
+              </div>
+            </TabsContent>
+          </Tabs>
+
+
+          
         </>
       )}
       <Modal isVisible={isModalOpen} onClose={() => setIsModalOpen(false)} />

@@ -15,14 +15,12 @@ import { Trash2Icon, MoreVertical, StarIcon, RotateCw, Download } from "lucide-r
 import FileDeleteDialog from "@/components/file-delete-dialog";
 
 interface FileCardActionsProps {
-  file: Doc<"files">;
-  isFavorited: boolean;
+  file: Doc<"files"> & { isFavorited: (boolean | undefined) };
   url: any
 }
 
 export const FileCardActions = ({
   file,
-  isFavorited,
   url
 }: FileCardActionsProps) => {
   const [isConfirmedOpen, setIsConfirmedOpen] = useState(false);
@@ -69,7 +67,7 @@ export const FileCardActions = ({
                 onClick={() => handleFavorite(file._id)}
                 className="flex gap-[6px] items-center cursor-pointer text-green-500"
               >
-                {isFavorited ? (
+                {file.isFavorited ? (
                   <span className="flex items-center gap-1">
                     <StarIcon size={20} fill="green" /> Unfavorite
                   </span>

@@ -15,7 +15,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+
 import { BsFilePdf } from "react-icons/bs";
 import { FaFileCsv } from "react-icons/fa6";
 import { PiMicrosoftExcelLogo } from "react-icons/pi";
@@ -30,11 +30,9 @@ import {
 import Truncate from "@/lib/text-truncate";
 
 export default function FileCard({
-  file,
-  favorites,
+  file
 }: {
-  file: Doc<"files">;
-  favorites: Doc<"favorites">[];
+  file: Doc<"files"> & { isFavorited: (boolean | undefined) };
 }) {
   const fileUrl: any = useQuery(api.files.imageUrl, { fileId: file.fileId });
   const userProfile = useQuery(api.users.getUserProfile, {
@@ -59,10 +57,6 @@ export default function FileCard({
     doc: <PiMicrosoftWordLogoFill size={50} />,
   } as Record<Doc<"files">["type"], ReactNode>;
 
-  // favorite docs
-  const isFavorited = favorites.some(
-    (favorite) => favorite.fileId === file._id
-  );
 
   useEffect(() => {
     const deadlineDate = new Date(file.deadline);
@@ -80,7 +74,7 @@ export default function FileCard({
             <Truncate text={file.name} maxLength={50}/>
           </div>
           <div className="absolute right-2 top-5">
-            <FileCardActions isFavorited={isFavorited} file={file} url={fileUrl}/>
+            <FileCardActions file={file} url={fileUrl}/>
           </div>
         </CardTitle>
         <CardDescription className="text-wrap overflow-hidden">
