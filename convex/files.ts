@@ -5,6 +5,7 @@ import { ConvexError, v } from "convex/values";
 import { MutationCtx, QueryCtx, internalMutation, mutation, query } from "./_generated/server"
 import { getUser } from "./users";
 import { fileTypes } from "./schema";
+import { Doc, Id } from "./_generated/dataModel";
 
 // creating an upload url generator
 export const generateUploadUrl = mutation(async (ctx) => {
@@ -81,7 +82,8 @@ export const getFiles = query({
         query: v.optional(v.string()),
         favorites: v.optional(v.boolean()),
         isPublic: v.optional(v.boolean()),
-        deleteOnly: v.optional(v.boolean())
+        deleteOnly: v.optional(v.boolean()),
+        type: v.optional(v.string())
     },
     async handler(ctx, args) {
         // stop unauthorized access
@@ -128,6 +130,11 @@ export const getFiles = query({
         } else {
             files = files.filter( file => !file.shouldDelete)
         }
+        
+        // filter files based on type
+        if (args.type) {
+            files = files.filter( file => file.type === args.type)
+        }
 
          // if no query return files else do a javascript filter with query and reuturn
          const query = args.query
@@ -152,24 +159,9 @@ export const deleteFile = mutation({
 
         if (!identity) throw new ConvexError("you must be logged in to delete a file");
 
-        // get file from database
-        const file = await ctx.db.get(args.fileId);
+        const deleteAccess = await canDeleteFile(ctx, args.fileId, identity.tokenIdentifier);
 
-        // if file does not exist throw a convex error
-        if (!file) throw new ConvexError("file does not exist");
-
-        // check if user has access to the org
-        const access = await hasAccessToOrg(
-            ctx,
-            identity.tokenIdentifier,
-            file.orgId
-        );
-
-        // stop unauthorized access
-        if (!access) throw new ConvexError("you do not have access to this organization");
-
-        //check if role is admin
-        if (access.user.orgIds.some(item => item.orgId === file.orgId && item.role === "admin")) {
+        if (deleteAccess) {
             // delete file from database
             await ctx.db.patch(args.fileId, {
                 shouldDelete: true,
@@ -177,9 +169,9 @@ export const deleteFile = mutation({
         } else {
             throw new ConvexError("you must be an admin to delete a file");
         }
-
     }
 })
+
 
 // Restore Files
 export const restoreFile = mutation({
@@ -191,25 +183,10 @@ export const restoreFile = mutation({
         const identity = await ctx.auth.getUserIdentity();
 
         if (!identity) throw new ConvexError("you must be logged in to restore a file");
-
-        // get file from database
-        const file = await ctx.db.get(args.fileId);
-
-        // if file does not exist throw a convex error
-        if (!file) throw new ConvexError("file does not exist");
-
-        // check if user has access to the org
-        const access = await hasAccessToOrg(
-            ctx,
-            identity.tokenIdentifier,
-            file.orgId
-        );
-
-        // stop unauthorized access
-        if (!access) throw new ConvexError("you do not have access to this organization");
+        const restoreAccess = await canDeleteFile(ctx, args.fileId, identity.tokenIdentifier);
 
         //check if role is admin
-        if (access.user.orgIds.some(item => item.orgId === file.orgId && item.role === "admin")) {
+        if (restoreAccess) {
             // delete file from database
             await ctx.db.patch(args.fileId, {
                 shouldDelete: false,
@@ -337,32 +314,26 @@ export const getAllFavorites = query({
     }
 });
 
-// async function hasAccessTofFile(
-//     ctx: QueryCtx | MutationCtx,
-//     fileId: Id<"files">
-// ) {
-//     // stop unauthorized access
-//     const identity = await ctx.auth.getUserIdentity();
+// absctract canDeleteFile into a helper function that we can use in delete and retore functions
+async function canDeleteFile(ctx: QueryCtx | MutationCtx, fileId: Id<"files">, tokenIdentifier: string) {
+    // get file from database
+    const file = await ctx.db.get(fileId);
 
-//     if (!identity) {
-//         return null;
-//     }
+    // if file does not exist throw a convex error
+    if (!file) throw new ConvexError("file does not exist");
 
-//     const file = await ctx.db.get(fileId);
+    // check if user has access to the org
+    const access = await hasAccessToOrg(
+        ctx,
+        tokenIdentifier,
+        file.orgId
+    );
 
-//     if (!file) return null;
-//     // check if user has access to the org
-//     const hasAccess = await hasAccessToOrg(ctx, identity.tokenIdentifier, fileId);
+    // stop unauthorized access
+    if (!access) throw new ConvexError("you do not have access to this organization");
 
-//     // return empty array if user does not have access
-//     if (!hasAccess) return [];
+    const canDelete = file.userId === access.user._id ||
+    access.user.orgIds.some(item => item.orgId === file.orgId && item.role === "admin");
 
-//     // get the user
-//     const user = await ctx.db.query("users").withIndex("by_tokenIdentifier",
-//     (q) => q.eq("tokenIdentifier", identity.tokenIdentifier)).first();
-
-//     if (!user) return null;
-
-//     return { user,}
-
-// }
+    return canDelete;
+}

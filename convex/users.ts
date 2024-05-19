@@ -115,3 +115,22 @@ export const getUserProfile = query({
         }
     },
 })
+
+// getMe function that checks if user is logged in and gets the user based on the token and returns user
+export const getMe = query({
+    args: {},
+    async handler(ctx) {
+        // stop unauthorized access
+        const identity = await ctx.auth.getUserIdentity();
+
+        if (!identity) {
+            return null
+        }
+
+        const user = await getUser(ctx, identity.tokenIdentifier);
+
+        if (!user) return null;
+
+        return { user }
+    }
+})

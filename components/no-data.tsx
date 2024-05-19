@@ -2,7 +2,7 @@ import Image from "next/image";
 
 export const NoData = () => {
     return (
-        <div className="flex flex-col items-center justify-center mt-20">
+        <div className="flex flex-col items-center justify-center mt-8">
             <div className="flex flex-col items-center space-y-5">
                 <div className=" ">
                     <Image

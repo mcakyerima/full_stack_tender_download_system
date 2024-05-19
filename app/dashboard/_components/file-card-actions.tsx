@@ -1,7 +1,7 @@
 
 import React, { useState } from "react";
 import { Doc, Id } from "@/convex/_generated/dataModel";
-import { useMutation } from "convex/react";
+import { useMutation, useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { Protect } from "@clerk/clerk-react";
 import {
@@ -26,6 +26,8 @@ export const FileCardActions = ({
   const [isConfirmedOpen, setIsConfirmedOpen] = useState(false);
   const setFavorite = useMutation(api.files.setFavorite);
   const restoreFile = useMutation(api.files.restoreFile);
+
+  const me = useQuery(api.users.getMe);
 
   // Handle donwload
   const handleDownload = () => {
@@ -81,7 +83,14 @@ export const FileCardActions = ({
             </>
 
           )}
-          <Protect role="org:admin" fallback={<></>}>
+          <Protect 
+            condition={(check) => {
+              return check({
+              role: "org:admin",
+            }) || file.userId === me?.user._id
+            } 
+          }
+          fallback={<></>}>
             <DropdownMenuItem
               onClick={() =>{
                 if (file.shouldDelete) {
