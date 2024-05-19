@@ -2,8 +2,6 @@
   @tailwind components;
   @tailwind utilities;
 
-  @layer base {
-    
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -51,8 +49,6 @@
   }
 }
 
-  }
-
   @layer base {
     * {
       @apply border-border;
@@ -62,5 +58,8 @@
     }
     .cl-organizationPreviewMainIdentifier {
       @apply bg-primary text-primary-foreground;
+    }
+    .my-component {
+      @apply bg-background text-foreground;
     }
   }

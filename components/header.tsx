@@ -10,7 +10,7 @@ import { MobileSidebar } from "@/app/dashboard/_components/mobile-sidebar";
 export default function Header({ dashboard }: { dashboard?: boolean}) {
   // console.log({dashboard})
   return (
-    <div className="sticky w-full top-0 z-50 border-b py-2 shadow-sm backdrop-filter backdrop-blur-lg bg-opacity-80">
+    <div className="sticky w-full top-0 z-50 border-b  shadow-sm backdrop-filter backdrop-blur-lg bg-opacity-80">
       <div className="container flex justify-between items-center mx-auto">
         <div className="flex cursor-pointer">
           {dashboard && (<MobileSidebar/>)}

@@ -111,7 +111,7 @@ export default function FilesBrowser({
   const isLoading = files === undefined;
 
   return (
-    <main className="container mx-auto pt-12">
+    <main className="container mx-auto relative">
       {isLoading && (
         <div className="flex flex-col gap-8 w-full items-center mt-24">
           <Loader2 className="sm:w-2 sm:h-2 lg:h-32 lg:w-32 md:w-10 md:h-10  animate-spin text-rose-700" />
@@ -121,9 +121,9 @@ export default function FilesBrowser({
       
       {!isLoading && (
         <>
-          <div className="flex space-x-36 md:space-x-8  lg:space-x-28   items-center">
+          <div className="flex space-x-36 md:space-x-8  lg:space-x-28  items-center sticky z-30 top-[60px]  my-component pt-8 pb-3 shadow-sm">
             <h1 className="text-lg md:text-2xl lg:text-4xl font-bold">
-              {title} 
+              {title}
             </h1>
             <div className="hidden sm:block flex-1">
               <div className="flex-1">
@@ -146,7 +146,7 @@ export default function FilesBrowser({
 
           {/* Table toggler */}
           <Tabs defaultValue="grid" className="mt-4  w-[380px] sm:w-full overflow-x-scroll sm:overflow-hidden">
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between sticky ">
               <TabsList>
                   <TabsTrigger value="grid" className="flex gap-1 items-cente">
                     <LayoutGrid size={22}/> Grid
