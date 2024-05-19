@@ -78,7 +78,7 @@ export default function FileCard({
           </div>
         </CardTitle>
         <CardDescription className="text-wrap overflow-hidden">
-          <Truncate text={file.description} maxLength={200}/>
+          <Truncate text={file.description} maxLength={100}/>
         </CardDescription>
       </CardHeader>
       <CardContent>
