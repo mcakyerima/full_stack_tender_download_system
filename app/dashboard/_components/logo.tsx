@@ -2,12 +2,15 @@ import Image from "next/image"
 
 export const Logo = () => {
     return (
-        <Image
-            height={100}
-            width={100}
-            alt='logo'
-            src="/Mercy-Corps.svg"
-            className="md:opacity-0 "
-        />
+        <div className="flex items-center gap-1">
+            <Image
+                height={25}
+                width={25}
+                alt='logo'
+                src="/Logo-2.svg"
+                className="md:opacity-0 "
+            />
+            <span className="md:opacity-0 font-semibold">Tender-Download</span>
+        </div>
     )
 }

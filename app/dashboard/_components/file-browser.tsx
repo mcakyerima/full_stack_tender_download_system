@@ -108,6 +108,7 @@ export default function FilesBrowser({
     return { ...file, isFavorited };
   });
 
+  // Loading state for files
   const isLoading = files === undefined;
 
   return (
@@ -144,7 +145,7 @@ export default function FilesBrowser({
                 <SearchBar query={query} setQuery={setQuery} />
           </div>
 
-          {/* Table toggler */}
+          {/* Table toggler for goggling between grid view and table List view*/}
           <Tabs defaultValue="grid" className="mt-4  w-[380px] sm:w-full overflow-x-scroll sm:overflow-hidden">
             <div className="flex items-center justify-between sticky ">
               <TabsList>
