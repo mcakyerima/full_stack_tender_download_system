@@ -1,12 +1,9 @@
 # 📝 Tender Download System
 
-![landing-light](https://github.com/mcakyerima/full_stack_tender_download_system/assets/58314409/080cc434-811f-41a6-bd5b-c6c54e662952)
-![tendar-ipad](https://github.com/mcakyerima/full_stack_tender_download_system/assets/58314409/a1ebd276-8202-41b2-a288-48f7ef594a0a)
-![tender-main](https://github.com/mcakyerima/full_stack_tender_download_system/assets/58314409/715cf12d-0e5f-4e1e-b16e-76d2a52ca9b4)
-
+![1](https://github.com/mcakyerima/full_stack_tender_download_system/assets/58314409/33876ea8-6b6c-4bd8-a9e4-ecbcda5bab78)
 <div style="display: flex; justify-content: space-around;">
-  <img src="https://github.com/mcakyerima/full_stack_tender_download_system/assets/58314409/a313f056-08eb-4090-9410-d57cc76e5de7" alt="Tender Mobile Dark" width="300"/>
-  <img src="https://github.com/mcakyerima/full_stack_tender_download_system/assets/58314409/02475c0e-ea19-49b7-acdb-8ba4a90ebd99" alt="Tender Mobile Light" width="300"/>
+  <img src="https://github.com/mcakyerima/full_stack_tender_download_system/assets/58314409/a6fc2215-61e2-4914-ac56-eee83b7ab452" alt="Tender Mobile Dark" width="300"/>
+  <img src="https://github.com/mcakyerima/full_stack_tender_download_system/assets/58314409/a6fc2215-61e2-4914-ac56-eee83b7ab452" alt="Tender Mobile Light" width="300"/>
 </div>
 
 ## 📖 Description
