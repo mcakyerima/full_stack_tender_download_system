@@ -10,7 +10,7 @@ export const Logo = () => {
                 src="/Logo-2.svg"
                 className="md:opacity-0 "
             />
-            <span className="md:opacity-0 font-semibold">Tender-Download</span>
+            <span className="md:opacity-0 font-semibold">TenderHub</span>
         </div>
     )
 }

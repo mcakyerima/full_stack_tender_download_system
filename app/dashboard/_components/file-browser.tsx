@@ -122,7 +122,7 @@ export default function FilesBrowser({
       
       {!isLoading && (
         <>
-          <div className="flex space-x-36 md:space-x-8  lg:space-x-28  items-center sticky z-30 top-[60px]  my-component pt-8 pb-3 shadow-sm">
+          <div className="flex space-x-36 md:space-x-8  lg:space-x-28  items-center sticky z-30 top-[55px]  my-component pt-8 pb-3 shadow-sm">
             <h1 className="text-lg md:text-2xl lg:text-4xl font-bold">
               {title}
             </h1>

@@ -26,7 +26,7 @@ export default function Header({ dashboard }: { dashboard?: boolean}) {
                 alt='logo'
                 src="/Logo-2.svg"
             />
-            <span className="font-semibold">Tender-Download</span>
+            <span className="font-semibold">TenderHub</span>
         </div>
             </a>
         </div>

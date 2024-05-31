@@ -22,7 +22,7 @@ export default function RootLayout({
     <ConvexClientProvider clerkPublishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}>
       <html lang="en">
         <head>
-          <link rel="icon" href="/favicon.png" />
+          <link rel="icon" href="/Logo-2.svg" />
         </head>
         <body className={font.className}>
           <ThemeProvider

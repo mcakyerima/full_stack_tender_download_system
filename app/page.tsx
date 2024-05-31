@@ -32,10 +32,10 @@ export default function LandingPage() {
           </div>
           <div className="text-center">
             <h1 className="text-4xl font-bold tracking-tight  sm:text-6xl">
-              Full Stack Tender download system.
+            Advance Tender Management Platform
             </h1>
             <p className="mt-6 text-lg leading-8 ">
-              The easient way to share and download tender documents with your team.
+              Empower your organization with our all-in-one solution for managing, sharing, and bidding on tender documents. Streamline your tender process with advanced features like real-time updates, AI-driven insights, and secure document handling.
             </p>
             <div className="mt-10 flex items-center justify-center gap-x-6">
               <Button
