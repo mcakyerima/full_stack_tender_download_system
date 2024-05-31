@@ -2,8 +2,8 @@
 
 ![1](https://github.com/mcakyerima/full_stack_tender_download_system/assets/58314409/33876ea8-6b6c-4bd8-a9e4-ecbcda5bab78)
 <div style="display: flex; justify-content: space-around;">
-  <img src="https://github.com/mcakyerima/full_stack_tender_download_system/assets/58314409/a6fc2215-61e2-4914-ac56-eee83b7ab452" alt="Tender Mobile Dark" width="300"/>
-  <img src="https://github.com/mcakyerima/full_stack_tender_download_system/assets/58314409/a6fc2215-61e2-4914-ac56-eee83b7ab452" alt="Tender Mobile Light" width="300"/>
+  <img src="" alt="Tender Mobile Dark" width="300"/>
+  <img src="" alt="Tender Mobile Light" width="300"/>
 </div>
 
 ## 📖 Description
