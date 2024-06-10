@@ -194,7 +194,7 @@ export default function FilesBrowser({
           </Tabs>
           {!isLoading && !query && (files === undefined || files.length === 0) && (
             <div className="flex flex-col items-center space-y-6 p-0 mb-4">
-              {/* if the pathname is /dashboard/trash, show the empty trash component */}
+              {/* if the pathname is /dashboard/trash, show the empty trash components */}
               {pathname === "/dashboard/trash" ? (
                 <EmptyTrash />
               ) : (
@@ -223,3 +223,4 @@ export default function FilesBrowser({
     </main>
   );
 }
+
