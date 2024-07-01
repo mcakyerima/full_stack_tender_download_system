@@ -7,7 +7,7 @@
 </div>
 
 ## 📖 Description
-The Tender Download System is a full-stack React-based web application built with TypeScript and React, designed for browsing, sharing, and downloading tender documents. Users can create organizations, share tenders, view tender details, sort and filter, add to favorites, delete, and more features like Communicating with all documents using Generative AI coming soon.
+TenderHub is a full-stack React-based web application built with TypeScript and React, designed for browsing, sharing, and downloading tender documents. Users can create organizations, share tenders, view tender details, sort and filter, add to favorites, delete, and more features like Communicating with all documents using Generative AI coming soon.
 
 ## Features
 
